@@ -54,54 +54,23 @@
 
   <textarea id="prompt" placeholder="Generate a vegetarian meal plan for the week..."></textarea>
   <br />
-  <button onclick="generateMealPlan()">Generate Meal Plan</button>
+  <button onclick="handleGenerate()">Generate Meal Plan</button>
 
   <div id="loading"></div>
 
-  <div id="result"></div>
+  <table id="mealTable">
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Breakfast</th>
+      <th>Lunch</th>
+      <th>Snack</th>
+      <th>Dinner</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-  <script>
-    function generateMealPlan() {
-      document.getElementById("loading").innerText = "Generating meal plan...";
-      document.getElementById("result").innerHTML = "";
-
-      // MOCK RESPONSE (Phase 1 UI-only)
-      const response = {
-        meal_plan: [
-          { day: "Monday", breakfast: "Oatmeal", lunch: "Veg Pulao", snack: "Fruit", dinner: "Paneer Curry" },
-          { day: "Tuesday", breakfast: "Idli", lunch: "Dal Rice", snack: "Nuts", dinner: "Veg Stir Fry" },
-          { day: "Wednesday", breakfast: "Toast", lunch: "Chickpea Salad", snack: "Yogurt", dinner: "Khichdi" },
-          { day: "Thursday", breakfast: "Upma", lunch: "Veg Wrap", snack: "Roasted Chana", dinner: "Tofu Curry" },
-          { day: "Friday", breakfast: "Smoothie", lunch: "Lemon Rice", snack: "Fruit", dinner: "Veg Pasta" },
-          { day: "Saturday", breakfast: "Poha", lunch: "Veg Biryani", snack: "Nuts", dinner: "Dal Tadka" },
-          { day: "Sunday", breakfast: "Pancakes", lunch: "Veg Burger", snack: "Popcorn", dinner: "Veg Soup" }
-        ]
-      };
-
-      setTimeout(() => {
-        document.getElementById("loading").innerText = "";
-        renderTable(response.meal_plan);
-      }, 800);
-    }
-
-    function renderTable(mealPlan) {
-      let html = "<table>";
-      html += "<tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Snack</th><th>Dinner</th></tr>";
-
-      mealPlan.forEach(day => {
-        html += `<tr>
-          <td>${day.day}</td>
-          <td>${day.breakfast}</td>
-          <td>${day.lunch}</td>
-          <td>${day.snack}</td>
-          <td>${day.dinner}</td>
-        </tr>`;
-      });
-
-      html += "</table>";
-      document.getElementById("result").innerHTML = html;
-    }
-  </script>
-
+  <script src="app.js"></script>
 </body>
 </html>
