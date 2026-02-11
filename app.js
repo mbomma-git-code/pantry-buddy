@@ -1,55 +1,53 @@
-async function generateMealPlan() {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-  
-    return {
-      week: [
-        {
-          day: "Monday",
-          breakfast: "Oatmeal with fruits",
-          lunch: "Grilled vegetable bowl",
-          snack: "Yogurt with nuts",
-          dinner: "Paneer stir fry"
-        },
-        {
-          day: "Tuesday",
-          breakfast: "Poha",
-          lunch: "Dal rice",
-          snack: "Fruit bowl",
-          dinner: "Vegetable khichdi"
-        }
-      ]
-    };
-  }
+const API_URL = "https://urneq69fyd.execute-api.us-east-2.amazonaws.com/prod/generate-meal-plan";
 
+document.getElementById("generateBtn").addEventListener("click", generateMealPlan);
 
-  async function handleGenerate() {
-    const loadingEl = document.getElementById("loading");
-    if (loadingEl) loadingEl.innerText = "Generating meal plan...";
-    try {
-      const response = await generateMealPlan();
-      renderTable(response.week);
-    } finally {
-      if (loadingEl) loadingEl.innerText = "";
-    }
-  }
-  
-  function renderTable(weekData) {
-    const tbody = document.querySelector("#mealTable tbody");
-    tbody.innerHTML = "";
-  
-    weekData.forEach(day => {
-      const row = document.createElement("tr");
-  
-      row.innerHTML = `
+function generateMealPlan() {
+  fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+  })
+  .then(res => res.json())
+  .then(data => {
+    renderTable(data.week);
+  })
+  .catch(err => {
+    console.error("Error:", err);
+    alert("Failed to generate meal plan");
+  });
+}
+
+function renderTable(weekData) {
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Breakfast</th>
+          <th>Lunch</th>
+          <th>Snack</th>
+          <th>Dinner</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  weekData.forEach(day => {
+    html += `
+      <tr>
         <td>${day.day}</td>
         <td>${day.breakfast}</td>
         <td>${day.lunch}</td>
         <td>${day.snack}</td>
         <td>${day.dinner}</td>
-      `;
-  
-      tbody.appendChild(row);
-    });
-  }
-  
+      </tr>
+    `;
+  });
+
+  html += "</tbody></table>";
+
+  document.getElementById("mealTable").innerHTML = html;
+}
