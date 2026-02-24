@@ -1,0 +1,7 @@
+Title: Stuffed Bell Peppers Meal Type: Dinner Diet: Vegan Cuisine:
+Mediterranean Calories: 600 Protein: 20g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

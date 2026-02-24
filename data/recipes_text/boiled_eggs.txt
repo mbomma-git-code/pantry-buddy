@@ -1,0 +1,7 @@
+Title: Boiled Eggs Meal Type: Snack Diet: Vegan Cuisine: Indian
+Calories: 690 Protein: 29g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

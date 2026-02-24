@@ -1,0 +1,7 @@
+Title: Energy Bites Meal Type: Snack Diet: Vegan Cuisine: Mediterranean
+Calories: 720 Protein: 32g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

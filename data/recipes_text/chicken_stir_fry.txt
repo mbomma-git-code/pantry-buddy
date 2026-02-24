@@ -1,0 +1,7 @@
+Title: Chicken Stir Fry Meal Type: Dinner Diet: Non-Vegetarian Cuisine:
+Indian Calories: 530 Protein: 13g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

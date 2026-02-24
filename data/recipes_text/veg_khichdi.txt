@@ -1,0 +1,7 @@
+Title: Veg Khichdi Meal Type: Dinner Diet: Vegan Cuisine: Indian
+Calories: 570 Protein: 17g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+*.js
+*.d.ts
+
+# CDK
+cdk.out/
+.cdk.staging/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Env
+.env
+.env.local

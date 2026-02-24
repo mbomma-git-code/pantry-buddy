@@ -1,0 +1,7 @@
+Title: Protein Shake Meal Type: Snack Diet: Vegetarian Cuisine: Asian
+Calories: 670 Protein: 27g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

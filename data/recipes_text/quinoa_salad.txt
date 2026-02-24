@@ -1,0 +1,7 @@
+Title: Quinoa Salad Meal Type: Lunch Diet: Non-Vegetarian Cuisine:
+Global Calories: 500 Protein: 10g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

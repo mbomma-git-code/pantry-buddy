@@ -1,0 +1,7 @@
+Title: Trail Mix Meal Type: Snack Diet: Non-Vegetarian Cuisine:
+Mediterranean Calories: 680 Protein: 28g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

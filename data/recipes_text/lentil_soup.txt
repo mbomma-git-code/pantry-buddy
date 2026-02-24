@@ -1,0 +1,7 @@
+Title: Lentil Soup Meal Type: Lunch Diet: Vegan Cuisine: Mediterranean
+Calories: 480 Protein: 33g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

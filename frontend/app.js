@@ -1,13 +1,12 @@
-const API_URL = "https://urneq69fyd.execute-api.us-east-2.amazonaws.com/prod/generate-meal-plan";
+// Load configuration
+const API_URL = getApiUrl('generateMealPlan');
 
 document.getElementById("generateBtn").addEventListener("click", generateMealPlan);
 
 function generateMealPlan() {
   fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: CONFIG.HEADERS,
     body: JSON.stringify({})
   })
   .then(res => res.json())

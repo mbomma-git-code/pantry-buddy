@@ -1,0 +1,7 @@
+Title: Fruit Salad Meal Type: Snack Diet: Vegan Cuisine: Global
+Calories: 660 Protein: 26g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

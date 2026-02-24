@@ -1,0 +1,7 @@
+Title: Veg Stir Fry Meal Type: Dinner Diet: Vegetarian Cuisine:
+Mediterranean Calories: 520 Protein: 12g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

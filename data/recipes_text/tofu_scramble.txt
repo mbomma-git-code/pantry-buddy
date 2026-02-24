@@ -1,0 +1,7 @@
+Title: Tofu Scramble Meal Type: Breakfast Diet: Vegan Cuisine:
+Mediterranean Calories: 360 Protein: 21g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

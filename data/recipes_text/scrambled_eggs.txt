@@ -1,0 +1,7 @@
+Title: Scrambled Eggs Meal Type: Breakfast Diet: Vegan Cuisine: Asian
+Calories: 270 Protein: 12g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

@@ -1,0 +1,7 @@
+Title: Tandoori Chicken Meal Type: Dinner Diet: Non-Vegetarian Cuisine:
+Asian Calories: 590 Protein: 19g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.

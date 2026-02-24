@@ -1,0 +1,7 @@
+Title: Idli with Sambar Meal Type: Breakfast Diet: Non-Vegetarian
+Cuisine: Mediterranean Calories: 320 Protein: 17g
+
+Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+
+Instructions: Prepare ingredients. Cook according to standard method.
+Serve fresh.
