@@ -61,7 +61,6 @@ export class PantryBuddyStack extends cdk.Stack {
       code: lambda.Code.fromAsset(backendPath),
       environment: {
         S3_BUCKET_NAME: dataBucket.bucketName,
-        AWS_REGION: this.region,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
