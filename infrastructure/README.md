@@ -92,6 +92,6 @@ A separate workflow deploys the CDK stack when relevant paths change on `main`, 
    - `AWS_CDK_DEPLOY_ROLE_ARN` – IAM role ARN for CDK (e.g. `arn:aws:iam::ACCOUNT_ID:role/GitHubCDKDeployRole`).
    - `AWS_ACCOUNT_ID` – Your AWS account ID.
 
-2. **IAM role:** The role must trust GitHub’s OIDC provider and have permissions for CDK/CloudFormation (e.g. CloudFormation, IAM, S3, Lambda, API Gateway). Use the same OIDC trust pattern as your existing `GitHubS3DeployRole`, with a policy that allows CDK deployment.
+2. **IAM role:** The role must trust GitHub’s OIDC provider and include **SSM** (e.g. `ssm:GetParameter` on `parameter/cdk-bootstrap/*`) plus CloudFormation, S3, IAM, Lambda, API Gateway, and Logs. If you see `AccessDeniedException` on `ssm:GetParameter`, add the policy in [IAM_CDK_DEPLOY.md](IAM_CDK_DEPLOY.md) to the role set in `AWS_CDK_DEPLOY_ROLE_ARN`.
 
 3. **Optional:** Run `npm install` in `infrastructure/` and commit `package-lock.json` so the workflow can use `npm ci` for faster, reproducible installs.

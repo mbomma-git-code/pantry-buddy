@@ -44,9 +44,12 @@ jobs:
           role-to-assume: ${{ vars.AWS_CDK_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: CDK bootstrap (if needed)
+      - name: CDK bootstrap
         working-directory: infrastructure
-        run: npx cdk bootstrap --require-approval never || true
+        run: npx cdk bootstrap --require-approval never
+        env:
+          CDK_DEFAULT_ACCOUNT: ${{ vars.AWS_ACCOUNT_ID }}
+          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
 
       - name: CDK deploy
         working-directory: infrastructure
