@@ -57,3 +57,48 @@ jobs:
         env:
           CDK_DEFAULT_ACCOUNT: ${{ vars.AWS_ACCOUNT_ID }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
+
+      - name: Verify AWS resources
+        run: |
+          set -e
+          REGION="${{ env.AWS_REGION }}"
+          STACK="PantryBuddyStack"
+
+          echo "=== 1. CloudFormation stack ==="
+          STATUS=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query 'Stacks[0].StackStatus' --output text)
+          if [[ "$STATUS" != "CREATE_COMPLETE" && "$STATUS" != "UPDATE_COMPLETE" ]]; then
+            echo "Unexpected stack status: $STATUS"
+            exit 1
+          fi
+          echo "Stack $STACK status: $STATUS"
+
+          echo "=== 2. Stack outputs (S3, API) ==="
+          WEBSITE_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='WebsiteBucketName'].OutputValue" --output text)
+          DATA_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='DataBucketName'].OutputValue" --output text)
+          API_ENDPOINT=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text)
+          echo "WebsiteBucketName: $WEBSITE_BUCKET"
+          echo "DataBucketName: $DATA_BUCKET"
+          echo "ApiEndpoint: $API_ENDPOINT"
+
+          echo "=== 3. S3 buckets ==="
+          aws s3api head-bucket --bucket "$WEBSITE_BUCKET" --region "$REGION" && echo "Website bucket exists: $WEBSITE_BUCKET"
+          aws s3api head-bucket --bucket "$DATA_BUCKET" --region "$REGION" && echo "Data bucket exists: $DATA_BUCKET"
+
+          echo "=== 4. Lambda (meal-plan function) ==="
+          LAMBDA_ARN=$(aws cloudformation describe-stack-resources --stack-name "$STACK" --region "$REGION" --query "StackResources[?ResourceType=='AWS::Lambda::Function'].PhysicalResourceId" --output text)
+          if [[ -z "$LAMBDA_ARN" ]]; then
+            echo "No Lambda function found in stack"
+            exit 1
+          fi
+          aws lambda get-function --function-name "$LAMBDA_ARN" --region "$REGION" --query 'Configuration.{FunctionName:FunctionName,Runtime:Runtime}' --output table
+          echo "Lambda function exists: $LAMBDA_ARN"
+
+          echo "=== 5. API Gateway (REST API and POST /generate-meal-plan) ==="
+          API_ID=$(aws cloudformation describe-stack-resources --stack-name "$STACK" --region "$REGION" --query "StackResources[?ResourceType=='AWS::ApiGateway::RestApi'].PhysicalResourceId" --output text)
+          if [[ -z "$API_ID" ]]; then
+            echo "No API Gateway REST API found in stack"
+            exit 1
+          fi
+          aws apigateway get-rest-api --rest-api-id "$API_ID" --region "$REGION" --query '{Name:name,Id:id}' --output table
+          echo "API Gateway REST API exists: $API_ID"
+          echo "All AWS resources verified successfully."
