@@ -35,6 +35,7 @@ Attach an **inline policy** (or a dedicated managed policy) to the role referenc
       "Effect": "Allow",
       "Action": [
         "ecr:CreateRepository",
+        "ecr:DeleteRepository",
         "ecr:DescribeRepositories",
         "ecr:SetRepositoryPolicy",
         "ecr:GetLifecyclePolicy",
@@ -105,6 +106,7 @@ The CDK bootstrap stack creates an ECR repository for container assets. Add an i
       "Effect": "Allow",
       "Action": [
         "ecr:CreateRepository",
+        "ecr:DeleteRepository",
         "ecr:DescribeRepositories",
         "ecr:SetRepositoryPolicy",
         "ecr:GetLifecyclePolicy",
