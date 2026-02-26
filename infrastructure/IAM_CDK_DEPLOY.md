@@ -10,7 +10,7 @@ arn:aws:ssm:REGION:ACCOUNT:parameter/cdk-bootstrap/hnb659fds/version
 because no identity-based policy allows the ssm:GetParameter action
 ```
 
-CDK needs to read the bootstrap version from SSM before deploying. The role must also be allowed to create/update CloudFormation stacks, S3 buckets, Lambda, API Gateway, IAM roles, and related resources. For **first-time bootstrap**, the role needs `ssm:PutParameter` so CDK can create the bootstrap version parameter.
+CDK needs to read the bootstrap version from SSM before deploying. The role must also be allowed to create/update CloudFormation stacks, S3 buckets, Lambda, API Gateway, IAM roles, and related resources. For **first-time bootstrap**, the role needs `ssm:PutParameter` so CDK can create the bootstrap version parameter. Bootstrap also creates an **ECR** repository for container image assets (`cdk-hnb659fds-container-assets-...`), so the role needs ECR permissions or bootstrap will fail with `ecr:CreateRepository` access denied.
 
 ## Fix: add this policy to the role used by the workflow
 
@@ -29,6 +29,20 @@ Attach an **inline policy** (or a dedicated managed policy) to the role referenc
         "ssm:DeleteParameter"
       ],
       "Resource": "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/cdk-bootstrap/*"
+    },
+    {
+      "Sid": "CDKBootstrapECR",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:CreateRepository",
+        "ecr:DescribeRepositories",
+        "ecr:SetRepositoryPolicy",
+        "ecr:GetLifecyclePolicy",
+        "ecr:PutLifecyclePolicy",
+        "ecr:PutImageScanningConfiguration",
+        "ecr:PutImageTagMutability"
+      ],
+      "Resource": "arn:aws:ecr:REGION:ACCOUNT_ID:repository/cdk-hnb659fds-container-assets-*"
     },
     {
       "Sid": "CDKDeploy",
@@ -75,6 +89,36 @@ Attach an **inline policy** (or a dedicated managed policy) to the role referenc
 4. Name the policy (e.g. `CDKDeployPolicy`) and save.
 
 After saving, re-run the **Deploy Infrastructure (CDK)** workflow. The bootstrap step can create the SSM parameter; the deploy step will then pass.
+
+### If you see "ecr:CreateRepository ... AccessDenied" on CDKToolkit
+
+The CDK bootstrap stack creates an ECR repository for container assets. Add an inline policy with the **CDKBootstrapECR** permissions below.
+
+**Standalone inline policy (ECR only)** — create a new inline policy on the role, name it e.g. `CDKBootstrapECR`, and use this JSON (replace `613926939057` and `us-east-2` with your account ID and region if different):
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CDKBootstrapECR",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:CreateRepository",
+        "ecr:DescribeRepositories",
+        "ecr:SetRepositoryPolicy",
+        "ecr:GetLifecyclePolicy",
+        "ecr:PutLifecyclePolicy",
+        "ecr:PutImageScanningConfiguration",
+        "ecr:PutImageTagMutability"
+      ],
+      "Resource": "arn:aws:ecr:us-east-2:613926939057:repository/cdk-hnb659fds-container-assets-*"
+    }
+  ]
+}
+```
+
+Then re-run the workflow. If the CDKToolkit stack is stuck in `CREATE_FAILED`, delete it in CloudFormation and let the next run recreate it.
 
 ### Optional: use a dedicated CDK role
 
