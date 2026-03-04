@@ -85,13 +85,25 @@ jobs:
           aws s3api head-bucket --bucket "$DATA_BUCKET" --region "$REGION" && echo "Data bucket exists: $DATA_BUCKET"
 
           echo "=== 4. Lambda (meal-plan function) ==="
-          LAMBDA_ARN=$(aws cloudformation describe-stack-resources --stack-name "$STACK" --region "$REGION" --query "StackResources[?ResourceType=='AWS::Lambda::Function'].PhysicalResourceId" --output text)
-          if [[ -z "$LAMBDA_ARN" ]]; then
+          LAMBDA_FUNCTIONS=$(aws cloudformation describe-stack-resources --stack-name "$STACK" --region "$REGION" --query "StackResources[?ResourceType=='AWS::Lambda::Function'].PhysicalResourceId" --output text)
+          if [[ -z "$LAMBDA_FUNCTIONS" ]]; then
             echo "No Lambda function found in stack"
             exit 1
           fi
-          aws lambda get-function --function-name "$LAMBDA_ARN" --region "$REGION" --query 'Configuration.{FunctionName:FunctionName,Runtime:Runtime}' --output table
-          echo "Lambda function exists: $LAMBDA_ARN"
+          MEAL_PLAN_LAMBDA=""
+          for fn in $LAMBDA_FUNCTIONS; do
+            if [[ "$fn" == *"MealPlanFunction"* ]]; then
+              MEAL_PLAN_LAMBDA="$fn"
+              break
+            fi
+          done
+          if [[ -z "$MEAL_PLAN_LAMBDA" ]]; then
+            echo "Meal plan Lambda not found. Lambda resources in stack:"
+            printf '%s\n' $LAMBDA_FUNCTIONS
+            exit 1
+          fi
+          aws lambda get-function --function-name "$MEAL_PLAN_LAMBDA" --region "$REGION" --query 'Configuration.{FunctionName:FunctionName,Runtime:Runtime}' --output table
+          echo "Meal plan Lambda exists: $MEAL_PLAN_LAMBDA"
 
           echo "=== 5. API Gateway (REST API and POST /generate-meal-plan) ==="
           API_ID=$(aws cloudformation describe-stack-resources --stack-name "$STACK" --region "$REGION" --query "StackResources[?ResourceType=='AWS::ApiGateway::RestApi'].PhysicalResourceId" --output text)
