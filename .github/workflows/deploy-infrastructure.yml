@@ -9,6 +9,7 @@ on:
     paths:
       - 'infrastructure/**'
       - 'backend/**'
+      - 'frontend/**'
       - 'data/recipes_json/**'
       - '.github/workflows/deploy-infrastructure.yml'
   workflow_dispatch:
@@ -57,6 +58,20 @@ jobs:
         env:
           CDK_DEFAULT_ACCOUNT: ${{ vars.AWS_ACCOUNT_ID }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
+
+      - name: Deploy frontend to stack website bucket
+        run: |
+          set -e
+          REGION="${{ env.AWS_REGION }}"
+          STACK="PantryBuddyStack"
+          WEBSITE_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='WebsiteBucketName'].OutputValue" --output text)
+          if [[ -z "$WEBSITE_BUCKET" || "$WEBSITE_BUCKET" == "None" ]]; then
+            echo "WebsiteBucketName output not found for stack $STACK"
+            exit 1
+          fi
+          echo "Deploying frontend/ to s3://$WEBSITE_BUCKET"
+          aws s3 sync frontend/ "s3://$WEBSITE_BUCKET/" --delete --region "$REGION"
+          echo "Frontend deployment complete."
 
       - name: Verify AWS resources
         run: |

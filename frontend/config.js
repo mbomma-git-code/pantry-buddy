@@ -3,7 +3,7 @@
  * Centralized configuration for API endpoints and version management
  */
 
-const PROD_API_BASE_URL = 'https://urneq69fyd.execute-api.us-east-2.amazonaws.com/prod';
+const PROD_API_BASE_URL = 'https://bkq2ftn73g.execute-api.us-east-2.amazonaws.com/prod';
 const DEFAULT_LOCAL_API_BASE_URL = 'http://127.0.0.1:8000';
 const LOCAL_API_OVERRIDE_STORAGE_KEY = 'pantrybuddy.localApiBaseUrl';
 
