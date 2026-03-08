@@ -39,7 +39,7 @@ isProject: false
 - **Goal**: Allow GitHub Actions runners to assume an IAM role in your AWS account via OIDC and perform CDK deployments.
 - **Steps (one-time in AWS console)**:
   - Create an IAM role (e.g. `GitHubCDKDeployRole`) with **trusted entity = Web identity** using `token.actions.githubusercontent.com` as the provider.
-  - Restrict the trust policy to your repo (e.g. `repo:OWNER/REPO:*`) and audience `sts.amazonaws.com`.
+  - Restrict the trust policy to your repo (e.g. `repo:OWNER/REPO:`*) and audience `sts.amazonaws.com`.
   - Attach a policy that grants necessary permissions for CloudFormation, S3, Lambda, API Gateway, IAM, and CloudWatch Logs used by `PantryBuddyStack`.
   - Copy the role ARN for use in GitHub.
 

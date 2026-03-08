@@ -4,6 +4,7 @@ Centralized configuration for AWS resources, API versions, and recipe paths
 """
 
 import os
+from pathlib import Path
 
 # API Version Configuration
 # Change this to switch between API versions
@@ -14,6 +15,14 @@ AWS_CONFIG = {
     'BUCKET_NAME': os.environ.get('S3_BUCKET_NAME', 'meal-plannerui-pantrybuddy'),
     'REGION': os.environ.get('AWS_REGION', 'us-east-2')
 }
+
+# Recipe data source configuration
+# Use RECIPE_DATA_SOURCE=local during local debugging to read JSON files from disk
+RECIPE_DATA_SOURCE = os.environ.get('RECIPE_DATA_SOURCE', 's3').strip().lower()
+LOCAL_RECIPE_DATA_ROOT = os.environ.get(
+    'LOCAL_RECIPE_DATA_ROOT',
+    str(Path(__file__).resolve().parents[1] / 'data')
+)
 
 # Recipe Files Configuration
 # Maps meal types to their S3 object keys

@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Local Lambda Adapter",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/local_adapter.py",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "RECIPE_DATA_SOURCE": "local",
+        "LOCAL_RECIPE_DATA_ROOT": "${workspaceFolder}/data",
+        "LOCAL_ADAPTER_HOST": "127.0.0.1",
+        "LOCAL_ADAPTER_PORT": "8000"
+      }
+    },
+    {
+      "name": "Chrome: Frontend Debug",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5500/index.html?apiBaseUrl=http://127.0.0.1:8000",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "Start Frontend Static Server"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Local Debug: Frontend + Lambda Adapter",
+      "configurations": [
+        "Python: Local Lambda Adapter",
+        "Chrome: Frontend Debug"
+      ],
+      "stopAll": true
+    }
+  ]
+}
