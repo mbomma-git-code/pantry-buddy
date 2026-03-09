@@ -1,9 +1,9 @@
 # PantryBuddy - High-Level Design Documentation
-## Phase 1: Weekly Meal Planner
+## Weekly Meal Planner
 
 **Version:** 1.0  
 **Date:** February 2026  
-**Status:** Phase 1 - Initial Implementation
+**Status:** Initial Implementation
 
 ---
 
@@ -233,8 +233,7 @@ PantryBuddy/
 │   └── recipes_text/        # Detailed recipe text files
 │
 ├── docs/                    # Documentation
-│   └── Phase 1/
-│       └── HIGH_LEVEL_DESIGN.md
+│   └── HIGH_LEVEL_DESIGN.md
 │
 ├── infrastructure/          # Deployment & infrastructure configs
 │                            # (Ready for Terraform, CloudFormation, etc.)
