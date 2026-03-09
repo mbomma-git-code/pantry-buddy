@@ -1,5 +1,5 @@
 // Load configuration
-const API_URL = getApiUrl('generateMealPlan');
+const API_URL = `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.v2.generateMealPlan}`;
 
 function debugLog(runId, hypothesisId, location, message, data) {
   fetch('http://127.0.0.1:7242/ingest/a9275978-a813-4db2-a98a-49f2877ecb79',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'2f1a8e'},body:JSON.stringify({sessionId:'2f1a8e',runId,hypothesisId,location,message,data,timestamp:Date.now()})}).catch(()=>{});
