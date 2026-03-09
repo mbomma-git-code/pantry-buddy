@@ -47,7 +47,7 @@ function getLocalApiOverride() {
 
 const CONFIG = {
   // API Version - Change this to switch between API versions
-  API_VERSION: 'v1', // Options: 'v1', 'v2'
+  API_VERSION: 'v2', // Options: 'v1', 'v2'
 
   // API Base URL
   API_BASE_URL: getLocalApiOverride() || PROD_API_BASE_URL,

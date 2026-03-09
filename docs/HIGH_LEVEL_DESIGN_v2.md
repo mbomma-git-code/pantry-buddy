@@ -116,7 +116,7 @@ PantryBuddy is a web-based meal planning application that generates a weekly mea
 #### 3.2.2 `config.py`
 - **Purpose**: Runtime configuration for API endpoints, data source mode, and AWS settings
 - **Key Values**:
-  - Versioned endpoint map (`/generate-meal-plan`, `/v2/generate-meal-plan`)
+  - Active endpoint map (`/v2/generate-meal-plan`)
   - `RECIPE_DATA_SOURCE` toggle (`s3` vs `local`)
 
 ### 3.3 Data Components
@@ -136,7 +136,7 @@ PantryBuddy is a web-based meal planning application that generates a weekly mea
 
 ```text
 1. User clicks "Generate Meal Plan"
-2. Frontend sends POST /generate-meal-plan
+2. Frontend sends POST /v2/generate-meal-plan
 3. API Gateway invokes Lambda
 4. Lambda loads recipe categories from S3
 5. Lambda builds a 7-day meal plan
@@ -148,7 +148,7 @@ PantryBuddy is a web-based meal planning application that generates a weekly mea
 
 #### Request
 ```json
-POST /generate-meal-plan
+POST /v2/generate-meal-plan
 Content-Type: application/json
 
 {}

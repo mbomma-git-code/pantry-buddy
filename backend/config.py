@@ -8,7 +8,7 @@ from pathlib import Path
 
 # API Version Configuration
 # Change this to switch between API versions
-API_VERSION = os.environ.get('API_VERSION', 'v1')  # Options: 'v1', 'v2'
+API_VERSION = os.environ.get('API_VERSION', 'v2')  # Options: 'v1', 'v2'
 
 # AWS Configuration
 AWS_CONFIG = {

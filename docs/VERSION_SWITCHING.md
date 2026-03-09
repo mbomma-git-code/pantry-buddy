@@ -10,11 +10,11 @@ The codebase has been refactored to use centralized configuration files, making 
 
 ### Frontend Configuration
 - **File**: `frontend/config.js`
-- **Key Setting**: `API_VERSION` (default: `'v1'`)
+- **Key Setting**: `API_VERSION` (default: `'v2'`)
 
 ### Backend Configuration
 - **File**: `backend/config.py`
-- **Key Setting**: `API_VERSION` (default: `'v1'`)
+- **Key Setting**: `API_VERSION` (default: `'v2'`)
 
 ## How to Switch Versions
 
@@ -63,7 +63,7 @@ Or in AWS Lambda console:
 ### Frontend (`frontend/config.js`)
 ```javascript
 const CONFIG = {
-  API_VERSION: 'v1',
+  API_VERSION: 'v2',
   API_BASE_URL: 'https://...',
   ENDPOINTS: {
     v1: { generateMealPlan: '/generate-meal-plan' },

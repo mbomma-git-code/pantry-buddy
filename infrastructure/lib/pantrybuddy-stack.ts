@@ -82,7 +82,8 @@ export class PantryBuddyStack extends cdk.Stack {
     });
 
     const lambdaIntegration = new apigateway.LambdaIntegration(mealPlanLambda);
-    const generateMealPlan = api.root.addResource('generate-meal-plan');
+    const v2 = api.root.addResource('v2');
+    const generateMealPlan = v2.addResource('generate-meal-plan');
     generateMealPlan.addMethod('POST', lambdaIntegration);
 
     // --- Optional: Deploy frontend to the website bucket (run once or via CI) ---
@@ -114,8 +115,8 @@ export class PantryBuddyStack extends cdk.Stack {
       exportName: 'PantryBuddy-ApiEndpoint',
     });
     new cdk.CfnOutput(this, 'GenerateMealPlanUrl', {
-      value: `${api.url}generate-meal-plan`,
-      description: 'Full URL for POST /generate-meal-plan',
+      value: `${api.url}v2/generate-meal-plan`,
+      description: 'Full URL for POST /v2/generate-meal-plan',
       exportName: 'PantryBuddy-GenerateMealPlanUrl',
     });
   }
