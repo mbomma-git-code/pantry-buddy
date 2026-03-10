@@ -258,7 +258,14 @@ Content-Type: application/json
 
 ---
 
-## 10. Document History
+## 10. Debug History
+
+- V2 endpoint routing incident and resolution details are documented in:
+  - `docs/cursor_debug_session.md`
+
+---
+
+## 11. Document History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
