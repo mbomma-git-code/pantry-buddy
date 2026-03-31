@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://minimalistbaker.com/toasted-coconut-baked-oatmeal/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://www.loveandlemons.com/kale-salad/",
+    "mealType": "lunch",
+    "diet": "vegetarian",
+    "cuisine": "American",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.noracooks.com/peanut-butter-energy-balls/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://cookieandkate.com/tomato-chickpea-pasta-recipe/",
+    "mealType": "dinner",
+    "diet": "vegetarian",
+    "cuisine": "Mediterranean",
+    "sourceName": "Cookie and Kate"
+  }
+]

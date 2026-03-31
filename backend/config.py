@@ -34,6 +34,15 @@ RECIPE_FILES = {
     "dinner": "recipes_json/dinner.json"
 }
 
+CANONICAL_RECIPE_FILE = os.environ.get(
+    'CANONICAL_RECIPE_FILE',
+    'recipes_json/recipes.json'
+)
+RECIPE_COMPATIBILITY_MODE = os.environ.get(
+    'RECIPE_COMPATIBILITY_MODE',
+    'auto'
+).strip().lower()
+
 # API Endpoint Paths by Version
 API_ENDPOINTS = {
     'v1': {

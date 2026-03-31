@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://example.com/your-curated-breakfast-recipe",
+    "mealType": "breakfast",
+    "diet": "vegetarian",
+    "cuisine": "American",
+    "sourceName": "Example Blog"
+  },
+  {
+    "url": "https://example.com/your-curated-dinner-recipe",
+    "mealType": "dinner"
+  }
+]

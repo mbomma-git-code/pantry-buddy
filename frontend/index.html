@@ -123,12 +123,20 @@
       font-size: 14px;
     }
 
+    .planner-content {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+      gap: 18px;
+      align-items: start;
+      margin-top: 14px;
+    }
+
     .week-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(255px, 1fr));
       gap: 18px;
       align-items: stretch;
-      margin-top: 14px;
+      min-width: 0;
     }
 
     .day-card {
@@ -186,8 +194,10 @@
 
     .plus-icon {
       color: #2f384f;
-      font-size: 23px;
-      font-weight: 300;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
       line-height: 1;
       user-select: none;
     }
@@ -207,6 +217,14 @@
       font-weight: 500;
     }
 
+    .recipe-trigger {
+      width: 100%;
+      cursor: pointer;
+      appearance: none;
+      font: inherit;
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+    }
+
     .meal-value.has-recipe {
       border-style: solid;
       border-color: #d2d9ec;
@@ -214,9 +232,157 @@
       color: #394465;
     }
 
+    .recipe-trigger:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(58, 68, 98, 0.08);
+    }
+
+    .recipe-trigger:focus-visible {
+      outline: 3px solid rgba(74, 91, 142, 0.28);
+      outline-offset: 2px;
+    }
+
+    .recipe-trigger.is-selected {
+      border-color: #4a5b8e;
+      box-shadow: 0 0 0 2px rgba(74, 91, 142, 0.14);
+      background: #edf2ff;
+    }
+
+    .recipe-panel {
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--card-shadow);
+      padding: 18px;
+      backdrop-filter: blur(3px);
+      position: sticky;
+      top: 18px;
+    }
+
+    .recipe-panel-context {
+      margin: 0 0 8px;
+      color: #6f7686;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .recipe-panel-title {
+      margin: 0 0 14px;
+      font-size: 28px;
+      line-height: 1.15;
+      color: #2b3247;
+    }
+
+    .recipe-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .recipe-meta-item,
+    .nutrition-item {
+      border-radius: 12px;
+      background: #f6f8fe;
+      border: 1px solid #e0e6f3;
+      padding: 10px 12px;
+    }
+
+    .recipe-meta-label,
+    .nutrition-label {
+      display: block;
+      margin-bottom: 4px;
+      color: #7d8697;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .recipe-meta-value,
+    .nutrition-value {
+      display: block;
+      color: #2f374f;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .recipe-detail-section + .recipe-detail-section {
+      margin-top: 18px;
+    }
+
+    .recipe-source-link-row {
+      margin: -6px 0 18px;
+    }
+
+    .recipe-source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #354571;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .recipe-source-link:hover {
+      text-decoration: underline;
+    }
+
+    .recipe-source-link:focus-visible {
+      outline: 3px solid rgba(74, 91, 142, 0.28);
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    .recipe-detail-section h3 {
+      margin: 0 0 10px;
+      color: #2d3448;
+      font-size: 16px;
+    }
+
+    .recipe-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #495067;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .recipe-list li + li {
+      margin-top: 7px;
+    }
+
+    .recipe-list-numbered {
+      padding-left: 20px;
+    }
+
+    .recipe-empty {
+      margin: 0;
+      color: #7f8798;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .nutrition-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
     @media (max-width: 950px) {
+      .planner-content {
+        grid-template-columns: 1fr;
+      }
+
       .week-grid {
         grid-template-columns: repeat(2, minmax(230px, 1fr));
+      }
+
+      .recipe-panel {
+        position: static;
       }
     }
 
@@ -244,6 +410,19 @@
       .week-grid {
         grid-template-columns: 1fr;
       }
+
+      .recipe-meta-grid,
+      .nutrition-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .recipe-panel {
+        padding: 16px;
+      }
+
+      .recipe-panel-title {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -255,6 +434,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script src="config.js?v=20260317v1"></script>
-  <script type="text/babel" src="app.js?v=20260317v1"></script>
+  <script src="meal_planner_model.js?v=20260330v1"></script>
+  <script type="text/babel" src="app.js?v=20260330v1"></script>
 </body>
 </html>

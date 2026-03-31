@@ -3,21 +3,28 @@ import random        # Standard library for random selection
 from pathlib import Path
 
 try:
-    import boto3     # AWS SDK for Python, used to talk to S3 and other AWS services
+    import boto3     # pyright: ignore[reportMissingImports]
 except ImportError:
     boto3 = None
+
+try:
+    from botocore.exceptions import ClientError  # pyright: ignore[reportMissingImports]
+except ImportError:
+    ClientError = None
 
 # Import configuration and constants
 from config import (
     API_VERSION,
     AWS_CONFIG,
+    CANONICAL_RECIPE_FILE,
     LOCAL_RECIPE_DATA_ROOT,
     RECIPE_FILES,
+    RECIPE_COMPATIBILITY_MODE,
     RECIPE_DATA_SOURCE,
     API_ENDPOINTS,
     HTTP_CONFIG
 )
-from constants import DAYS_OF_WEEK
+from constants import DAYS_OF_WEEK, MEAL_TYPES
 
 # Extract AWS configuration
 BUCKET_NAME = AWS_CONFIG['BUCKET_NAME']
@@ -44,47 +51,327 @@ def get_s3_client():
 
     return _s3_client
 
-def load_recipes(key):
+def _is_missing_recipe_object_error(exc):
+    if isinstance(exc, FileNotFoundError):
+        return True
+
+    if ClientError is not None and isinstance(exc, ClientError):
+        error_code = exc.response.get("Error", {}).get("Code")
+        return error_code in {"404", "NoSuchKey", "NotFound"}
+
+    return exc.__class__.__name__ == "NoSuchKey"
+
+
+def load_json_object(key, required=True):
     """
-    Load a list of recipes from the configured data source for a given key.
+    Load JSON content from the configured data source for a given key.
 
     :param key: Path of the JSON file inside the S3 bucket
                 (e.g. 'recipes_json/breakfast.json')
-    :return: Python object parsed from the JSON (expected to be a list of recipes)
+    :param required: When False, return None instead of raising for a missing object
+    :return: Python object parsed from the JSON
     """
     if RECIPE_DATA_SOURCE == "local":
         local_path = Path(LOCAL_RECIPE_DATA_ROOT) / key
+        if not local_path.exists():
+            if required:
+                raise FileNotFoundError(f"Recipe file not found: {local_path}")
+            return None
+
         with local_path.open("r", encoding="utf-8") as recipe_file:
             return json.load(recipe_file)
 
-    # Fetch the object from S3
     s3 = get_s3_client()
-    response = s3.get_object(Bucket=BUCKET_NAME, Key=key)
-    # Read the file content from the streaming body and decode bytes to string
+    try:
+        response = s3.get_object(Bucket=BUCKET_NAME, Key=key)
+    except Exception as exc:
+        if not required and _is_missing_recipe_object_error(exc):
+            return None
+        raise
+
     content = response["Body"].read().decode("utf-8")
-    # Parse JSON string into a Python object (e.g. list of recipe names)
     return json.loads(content)
 
 
-def load_all_recipes():
+def _normalize_recipe_choice(recipe):
+    if isinstance(recipe, str) and recipe.strip():
+        return recipe
+
+    if isinstance(recipe, dict):
+        title = recipe.get("title") or recipe.get("id")
+        if isinstance(title, str) and title.strip():
+            return title
+
+    raise ValueError("Each recipe entry must be a non-empty string or object with a title.")
+
+
+def _normalize_recipe_collection(meal, recipe_list):
+    if not isinstance(recipe_list, list):
+        raise ValueError(f"'{meal}' recipes must be a list.")
+
+    normalized = []
+    for recipe in recipe_list:
+        _normalize_recipe_choice(recipe)
+        normalized.append(recipe)
+
+    if not normalized:
+        raise ValueError(f"'{meal}' recipes must contain at least one recipe.")
+
+    return normalized
+
+
+def _extract_recipe_list(artifact):
+    if artifact is None:
+        raise ValueError("Canonical recipe artifact is not available.")
+
+    if isinstance(artifact, dict):
+        recipe_list = artifact.get("recipes")
+    elif isinstance(artifact, list):
+        recipe_list = artifact
+    else:
+        raise ValueError("Canonical recipe artifact must be an object or list.")
+
+    if not isinstance(recipe_list, list) or not recipe_list:
+        raise ValueError("Canonical recipe artifact must include a non-empty 'recipes' list.")
+
+    return recipe_list
+
+
+def load_legacy_recipe_indexes():
     recipes = {}
 
     for meal, key in RECIPE_FILES.items():
-        recipes[meal] = load_recipes(key)
+        recipes[meal] = _normalize_recipe_collection(meal, load_json_object(key))
 
     return recipes
 
 
+def load_canonical_recipe_artifact(required=False):
+    return load_json_object(CANONICAL_RECIPE_FILE, required=required)
+
+
+def build_meal_indexes_from_canonical(artifact):
+    recipe_list = _extract_recipe_list(artifact)
+
+    recipes_by_meal = {meal: [] for meal in MEAL_TYPES}
+
+    for recipe in recipe_list:
+        if not isinstance(recipe, dict):
+            raise ValueError("Canonical recipes must be objects.")
+
+        meal_type = recipe.get("mealType")
+        if meal_type not in recipes_by_meal:
+            raise ValueError(
+                "Canonical recipe entries must include a valid 'mealType'."
+            )
+
+        recipes_by_meal[meal_type].append(recipe)
+
+    for meal, meal_recipes in recipes_by_meal.items():
+        recipes_by_meal[meal] = _normalize_recipe_collection(meal, meal_recipes)
+
+    return recipes_by_meal
+
+
+def _recipe_lookup_keys(value):
+    if not isinstance(value, str):
+        return []
+
+    cleaned = value.strip()
+    if not cleaned:
+        return []
+
+    return [cleaned, cleaned.lower()]
+
+
+def build_recipe_lookup_from_canonical(artifact):
+    lookup = {}
+
+    for recipe in _extract_recipe_list(artifact):
+        if not isinstance(recipe, dict):
+            raise ValueError("Canonical recipes must be objects.")
+
+        for field_name in ("id", "title"):
+            for key in _recipe_lookup_keys(recipe.get(field_name)):
+                lookup[key] = recipe
+
+    return lookup
+
+
+def empty_nutrition():
+    return {
+        "calories": None,
+        "proteinGrams": None,
+        "carbsGrams": None,
+        "fatGrams": None,
+    }
+
+
+def _shape_ingredients(value):
+    if not isinstance(value, list):
+        return []
+
+    shaped = []
+    for ingredient in value:
+        if not isinstance(ingredient, dict):
+            continue
+
+        shaped.append(
+            {
+                "item": ingredient.get("item"),
+                "amount": ingredient.get("amount"),
+                "unit": ingredient.get("unit"),
+                "preparation": ingredient.get("preparation"),
+            }
+        )
+
+    return shaped
+
+
+def _shape_instructions(value):
+    if not isinstance(value, list):
+        return []
+
+    shaped = []
+    for index, instruction in enumerate(value, start=1):
+        if isinstance(instruction, dict):
+            text = instruction.get("text")
+            step = instruction.get("step", index)
+        else:
+            text = instruction
+            step = index
+
+        if not isinstance(text, str) or not text.strip():
+            continue
+
+        shaped.append({"step": step, "text": text.strip()})
+
+    return shaped
+
+
+def _shape_nutrition(value):
+    nutrition = empty_nutrition()
+    if not isinstance(value, dict):
+        return nutrition
+
+    for key in nutrition:
+        nutrition[key] = value.get(key)
+
+    return nutrition
+
+
+def _build_recipe_detail(recipe, meal_type, canonical_lookup=None):
+    if isinstance(recipe, dict):
+        source_recipe = recipe
+    elif isinstance(recipe, str):
+        source_recipe = None
+        if canonical_lookup is not None:
+            for key in _recipe_lookup_keys(recipe):
+                if key in canonical_lookup:
+                    source_recipe = canonical_lookup[key]
+                    break
+
+        source_recipe = source_recipe or {
+            "id": None,
+            "title": recipe.strip(),
+            "mealType": meal_type,
+            "diet": None,
+            "cuisine": None,
+            "ingredients": [],
+            "instructions": [],
+            "nutrition": empty_nutrition(),
+        }
+    else:
+        raise ValueError("Each recipe entry must be a non-empty string or object with a title.")
+
+    title = _normalize_recipe_choice(source_recipe)
+    return {
+        "id": source_recipe.get("id"),
+        "title": title,
+        "mealType": source_recipe.get("mealType") or meal_type,
+        "diet": source_recipe.get("diet"),
+        "cuisine": source_recipe.get("cuisine"),
+        "sourceName": source_recipe.get("sourceName"),
+        "sourceUrl": source_recipe.get("sourceUrl"),
+        "ingredients": _shape_ingredients(source_recipe.get("ingredients")),
+        "instructions": _shape_instructions(source_recipe.get("instructions")),
+        "nutrition": _shape_nutrition(source_recipe.get("nutrition")),
+    }
+
+
+def load_canonical_recipe_lookup(required=False):
+    artifact = load_canonical_recipe_artifact(required=required)
+    if artifact is None:
+        return None
+
+    return build_recipe_lookup_from_canonical(artifact)
+
+
+def load_all_recipes():
+    compatibility_mode = RECIPE_COMPATIBILITY_MODE
+
+    if compatibility_mode not in {"auto", "indexes", "canonical"}:
+        raise ValueError(
+            "RECIPE_COMPATIBILITY_MODE must be one of: auto, indexes, canonical."
+        )
+
+    if compatibility_mode == "indexes":
+        return load_legacy_recipe_indexes()
+
+    canonical_artifact = load_canonical_recipe_artifact(
+        required=(compatibility_mode == "canonical")
+    )
+
+    if compatibility_mode == "canonical":
+        return build_meal_indexes_from_canonical(canonical_artifact)
+
+    if canonical_artifact is not None:
+        try:
+            return build_meal_indexes_from_canonical(canonical_artifact)
+        except (ValueError, TypeError, KeyError):
+            pass
+
+    return load_legacy_recipe_indexes()
+
+
 def build_week_plan(recipes):
     week_plan = []
+    canonical_lookup = None
+
+    # Legacy title-only indexes can still be enriched from the canonical artifact.
+    if any(
+        isinstance(recipe, str)
+        for meal in MEAL_TYPES
+        for recipe in recipes.get(meal, [])
+    ):
+        try:
+            canonical_lookup = load_canonical_recipe_lookup(required=False)
+        except (ValueError, TypeError, KeyError, FileNotFoundError):
+            canonical_lookup = None
 
     for day in DAYS_OF_WEEK:
         day_plan = {
             "day": day,
-            "breakfast": random.choice(recipes["breakfast"]),
-            "lunch": random.choice(recipes["lunch"]),
-            "snack": random.choice(recipes["snack"]),
-            "dinner": random.choice(recipes["dinner"]),
+            "breakfast": _build_recipe_detail(
+                random.choice(recipes["breakfast"]),
+                "breakfast",
+                canonical_lookup=canonical_lookup,
+            ),
+            "lunch": _build_recipe_detail(
+                random.choice(recipes["lunch"]),
+                "lunch",
+                canonical_lookup=canonical_lookup,
+            ),
+            "snack": _build_recipe_detail(
+                random.choice(recipes["snack"]),
+                "snack",
+                canonical_lookup=canonical_lookup,
+            ),
+            "dinner": _build_recipe_detail(
+                random.choice(recipes["dinner"]),
+                "dinner",
+                canonical_lookup=canonical_lookup,
+            ),
         }
         week_plan.append(day_plan)
 
@@ -165,8 +452,9 @@ def lambda_handler(event, context):
     :param context: Runtime information about the Lambda invocation
 
     Steps:
-      1. Load all recipe lists (breakfast/lunch/snack/dinner) from S3.
-      2. For each day of the week, randomly choose one recipe from each list.
+      1. Load recipe data from the canonical artifact when available, or fall back
+         to the legacy meal-type indexes.
+      2. For each day of the week, randomly choose one recipe from each meal list.
       3. Build a 'week' array containing one object per day.
       4. Return an HTTP-style JSON response with CORS headers.
     """

@@ -1,7 +1,15 @@
-Title: Avocado Toast Meal Type: Breakfast Diet: Vegetarian Cuisine:
-Mediterranean Calories: 280 Protein: 13g
+Title: Avocado Toast 
+Meal Type: Breakfast 
+Diet: Vegetarian 
+Cuisine: Mediterranean 
+Calories: 280 
+Protein: 13g
 
-Ingredients: - Ingredient 1 - Ingredient 2 - Ingredient 3
+Ingredients: 
+- Avocado 
+- Bread
+- Ingredient 3
 
-Instructions: Prepare ingredients. Cook according to standard method.
+Instructions: 
+Prepare ingredients. Cook according to standard method.
 Serve fresh.

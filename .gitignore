@@ -1,2 +1,5 @@
 .cursor_tmp/
 __pycache__
+.venv/
+playwright-report/
+test-results/

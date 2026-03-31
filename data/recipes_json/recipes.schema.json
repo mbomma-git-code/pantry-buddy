@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pantrybuddy.dev/schemas/recipes.schema.json",
+  "title": "PantryBuddy Canonical Recipe Artifact",
+  "description": "Canonical structured recipe dataset used by offline import and review workflows.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "generatedAt",
+    "sourceType",
+    "recipes"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Schema version for the artifact."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp showing when the artifact was created."
+    },
+    "sourceType": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "imported",
+        "mixed"
+      ],
+      "description": "How the recipes in this artifact were produced."
+    },
+    "recipes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/recipe"
+      }
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ingredient": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item",
+        "amount",
+        "unit",
+        "preparation"
+      ],
+      "properties": {
+        "item": {
+          "type": "string",
+          "minLength": 1
+        },
+        "amount": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ],
+          "description": "Numeric amount when known, otherwise a freeform string or null."
+        },
+        "unit": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "preparation": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "instruction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step",
+        "text"
+      ],
+      "properties": {
+        "step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "nutrition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calories",
+        "proteinGrams",
+        "carbsGrams",
+        "fatGrams"
+      ],
+      "properties": {
+        "calories": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "proteinGrams": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "carbsGrams": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "fatGrams": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "sourceUrl",
+        "sourceName",
+        "mealType",
+        "diet",
+        "cuisine",
+        "ingredients",
+        "instructions",
+        "nutrition",
+        "image"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Stable slug identifier."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceUrl": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceName": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "mealType": {
+          "type": "string",
+          "enum": [
+            "breakfast",
+            "lunch",
+            "snack",
+            "dinner"
+          ]
+        },
+        "diet": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "cuisine": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "ingredients": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ingredient"
+          }
+        },
+        "instructions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/instruction"
+          }
+        },
+        "nutrition": {
+          "$ref": "#/$defs/nutrition"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

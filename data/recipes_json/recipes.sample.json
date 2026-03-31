@@ -1,0 +1,407 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-03-30T03:32:15.928812Z",
+  "sourceType": "manual",
+  "recipes": [
+    {
+      "id": "avocado-toast",
+      "title": "Avocado Toast",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "breakfast",
+      "diet": "vegetarian",
+      "cuisine": "Mediterranean",
+      "ingredients": [
+        {
+          "item": "Avocado",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Bread",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 280,
+        "proteinGrams": 13,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "greek-yogurt-bowl",
+      "title": "Greek Yogurt Bowl",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "breakfast",
+      "diet": "vegan",
+      "cuisine": "Global",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 300,
+        "proteinGrams": 15,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "chicken-biryani",
+      "title": "Chicken Biryani",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "lunch",
+      "diet": "vegetarian",
+      "cuisine": "Asian",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 430,
+        "proteinGrams": 28,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "chickpea-salad",
+      "title": "Chickpea Salad",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "lunch",
+      "diet": "vegetarian",
+      "cuisine": "Mediterranean",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 400,
+        "proteinGrams": 25,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "boiled-eggs",
+      "title": "Boiled Eggs",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "snack",
+      "diet": "vegan",
+      "cuisine": "Indian",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 690,
+        "proteinGrams": 29,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "energy-bites",
+      "title": "Energy Bites",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "snack",
+      "diet": "vegan",
+      "cuisine": "Mediterranean",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 720,
+        "proteinGrams": 32,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "black-bean-tacos",
+      "title": "Black Bean Tacos",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "dinner",
+      "diet": "vegan",
+      "cuisine": "Asian",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 630,
+        "proteinGrams": 23,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    },
+    {
+      "id": "cauliflower-curry",
+      "title": "Cauliflower Curry",
+      "sourceUrl": null,
+      "sourceName": "PantryBuddy Seed Data",
+      "mealType": "dinner",
+      "diet": "vegetarian",
+      "cuisine": "Mediterranean",
+      "ingredients": [
+        {
+          "item": "Ingredient 1",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 2",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Ingredient 3",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prepare ingredients."
+        },
+        {
+          "step": 2,
+          "text": "Cook according to standard method."
+        },
+        {
+          "step": 3,
+          "text": "Serve fresh."
+        }
+      ],
+      "nutrition": {
+        "calories": 640,
+        "proteinGrams": 24,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": null
+    }
+  ]
+}

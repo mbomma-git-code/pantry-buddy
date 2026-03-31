@@ -1,0 +1,421 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-03-30T22:58:23.945143Z",
+  "sourceType": "imported",
+  "recipes": [
+    {
+      "id": "toasted-coconut-baked-oatmeal-recipe",
+      "title": "Toasted Coconut Baked Oatmeal",
+      "sourceUrl": "https://minimalistbaker.com/toasted-coconut-baked-oatmeal/",
+      "sourceName": "Minimalist Baker",
+      "mealType": "breakfast",
+      "diet": "vegan",
+      "cuisine": "American",
+      "ingredients": [
+        {
+          "item": "flaxseed meal ((to make flax eggs))",
+          "amount": 2,
+          "unit": "Tbsp",
+          "preparation": null
+        },
+        {
+          "item": "water ((to make flax eggs))",
+          "amount": 5,
+          "unit": "Tbsp",
+          "preparation": null
+        },
+        {
+          "item": "cup unsweetened shredded coconut ((divided))",
+          "amount": 2,
+          "unit": "/3",
+          "preparation": null
+        },
+        {
+          "item": "old fashioned rolled oats ((gluten-free if GF))",
+          "amount": 2,
+          "unit": "cups",
+          "preparation": null
+        },
+        {
+          "item": "cup slivered toasted almonds",
+          "amount": 2,
+          "unit": "/3",
+          "preparation": null
+        },
+        {
+          "item": "dried fruit ((like blueberries, cherries or cranberries))",
+          "amount": 3,
+          "unit": "Tbsp",
+          "preparation": null
+        },
+        {
+          "item": "coconut sugar",
+          "amount": 1,
+          "unit": "Tbsp",
+          "preparation": null
+        },
+        {
+          "item": "tsp sea salt",
+          "amount": 1,
+          "unit": "/4",
+          "preparation": null
+        },
+        {
+          "item": "cup maple syrup",
+          "amount": 1,
+          "unit": "/4",
+          "preparation": null
+        },
+        {
+          "item": "cup non-dairy milk ((I used 1 cup unsweetened almond milk + 3/4 cup light coconut milk))",
+          "amount": 1,
+          "unit": "3/4",
+          "preparation": null
+        },
+        {
+          "item": "cup coconut oil ((melted))",
+          "amount": 1,
+          "unit": "/4",
+          "preparation": null
+        },
+        {
+          "item": "Coconut whipped cream",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Non-dairy milk",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Fruit",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Preheat oven to 350 degrees F (176 C) and grease a 2-quart (or similar size) baking dish with coconut oil (or vegan butter)."
+        },
+        {
+          "step": 2,
+          "text": "Prepare flax eggs in a medium-size mixing bowl by mixing flaxseed meal and water and let rest for 5 minutes."
+        },
+        {
+          "step": 3,
+          "text": "While the oven is preheating (and isn't quite at 350), add shredded coconut to a bare baking sheet and bake until just slightly golden brown - about 3-4 minutes. Watch carefully as it browns quickly. Set aside."
+        },
+        {
+          "step": 4,
+          "text": "To a large mixing bowl, add oats, almonds, half of the toasted coconut (reserve the rest for serving), dried fruit, coconut sugar, and salt. Stir to combine."
+        },
+        {
+          "step": 5,
+          "text": "Add maple syrup and non-dairy milk to the flax eggs and whisk thoroughly to combine. While whisking, pour in the coconut oil and whisk thoroughly to combine. (NOTE: If the mixture gets clumpy, microwave for 10-20 seconds to re-melt coconut oil. However, it will melt in the oven while baking so it's not a big concern.) Add wet to dry and mix."
+        },
+        {
+          "step": 6,
+          "text": "Pour oatmeal into prepared dish and bake for 37-40 minutes, or until slightly golden brown and firm in the middle. Then increase heat to 400 degrees F (204 C) and bake 5-8 minutes more to brown the edges and crisp the top."
+        },
+        {
+          "step": 7,
+          "text": "Serve warm with desired toppings, such as coconut whipped cream (or coconut milk or almond milk), extra toasted coconut, and fruit. Best when fresh, though leftovers keep covered in the refrigerator 2-3 days. Reheat in a 350 degree oven, or the microwave."
+        }
+      ],
+      "nutrition": {
+        "calories": 297.0,
+        "proteinGrams": 6.1,
+        "carbsGrams": 28.4,
+        "fatGrams": 18.7
+      },
+      "image": "https://minimalistbaker.com/wp-content/uploads/2015/11/Toasted-Coconut-Baked-Oatmeal-SQUARE.jpg"
+    },
+    {
+      "id": "kale-salad-love-and-lemons-recipe",
+      "title": "Kale Salad - Love and Lemons",
+      "sourceUrl": "https://www.loveandlemons.com/kale-salad/",
+      "sourceName": "Love and Lemons",
+      "mealType": "lunch",
+      "diet": "vegetarian",
+      "cuisine": "American",
+      "ingredients": [
+        {
+          "item": "Here\u2019s what you need to make this kale salad recipe:",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Kale, of course! Any type of kale will work here. I especially like to use curly kale, but feel free to swap in Tuscan kale (aka lacinato kale) if you prefer.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Extra-virgin olive oil and fresh lemon juice \u2013 You\u2019ll massage them into the raw kale to help the leaves soften.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Roasted chickpeas \u2013 They add plant-based protein and crunch.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Carrots and beets \u2013 I grate these root veggies to add sweet, earthy flavor to the salad.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Watermelon radish \u2013 Thin slices add crisp texture and bright pops of pink to the salad. If you can\u2019t find a watermelon radish at your market or grocery store, sub in regular red radishes.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Avocado \u2013 For creamy texture.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Dried cranberries \u2013 They add sweet-tart flavor.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Toasted pepitas and sesame seeds \u2013 For nutty crunch.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "And salt and pepper \u2013 To make all the flavors pop!",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Find the complete recipe with measurements below.",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Make the dressing: Preheat the oven to 400\u00b0F and line two baking sheets with parchment paper. Place the carrots on one of the baking sheets. Drizzle with olive oil, sprinkle with salt, and toss to coat. Spread evenly on the baking sheet and roast for 20 to 25 minutes, or until soft. Transfer the carrots to a blender and add the water, olive oil, rice vinegar, ginger, and salt. Blend the dressing until smooth and chill in the fridge until ready to use."
+        },
+        {
+          "step": 2,
+          "text": "On the second baking sheet, prepare the roasted chickpeas according to this recipe."
+        },
+        {
+          "step": 3,
+          "text": "Place the kale leaves in a large bowl and add the lemon juice, olive oil, and a few pinches of salt. Use your hands to massage the leaves until they become soft and wilted and reduce in the bowl by about half."
+        },
+        {
+          "step": 4,
+          "text": "Add the carrot, beet, watermelon radish, half of the cubed avocado, cranberries, pepitas, a few more pinches of salt, and a few grinds of pepper. Toss to combine. Drizzle generously with the carrot ginger dressing. Top with the remaining avocado, more dressing, and the roasted chickpeas and sprinkle with the sesame seeds. Season to taste and serve."
+        }
+      ],
+      "nutrition": {
+        "calories": null,
+        "proteinGrams": null,
+        "carbsGrams": null,
+        "fatGrams": null
+      },
+      "image": "https://cdn.loveandlemons.com/wp-content/uploads/opengraph/2019/01/kale-salad.jpg"
+    },
+    {
+      "id": "peanut-butter-energy-balls-recipe",
+      "title": "Peanut Butter Energy Balls",
+      "sourceUrl": "https://www.noracooks.com/peanut-butter-energy-balls/",
+      "sourceName": "Nora Cooks",
+      "mealType": "snack",
+      "diet": "vegan",
+      "cuisine": "American",
+      "ingredients": [
+        {
+          "item": "creamy peanut butter",
+          "amount": 1,
+          "unit": "cup",
+          "preparation": null
+        },
+        {
+          "item": "cups old fashioned rolled oats",
+          "amount": 1,
+          "unit": "1/4",
+          "preparation": null
+        },
+        {
+          "item": "cup ground flaxseeds",
+          "amount": 1,
+          "unit": "/2",
+          "preparation": null
+        },
+        {
+          "item": "pure maple syrup (or agave)",
+          "amount": 3,
+          "unit": "tablespoons",
+          "preparation": null
+        },
+        {
+          "item": "cup mini chocolate chips",
+          "amount": 1,
+          "unit": "/2",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "In a medium sized bowl, stir all the ingredients together until well combined."
+        },
+        {
+          "step": 2,
+          "text": "Place the bowl in the refrigerator for 30 minutes to chill. This makes rolling the balls easier."
+        },
+        {
+          "step": 3,
+          "text": "Once chilled, roll into 1 inch balls. If it's too sticky, get your hands slightly damp every so often."
+        },
+        {
+          "step": 4,
+          "text": "Store in the refrigerator for 1 week, or freeze them for longer."
+        }
+      ],
+      "nutrition": {
+        "calories": 148.0,
+        "proteinGrams": 5.0,
+        "carbsGrams": 13.0,
+        "fatGrams": 10.0
+      },
+      "image": "https://www.noracooks.com/wp-content/uploads/2024/10/peanut-butter-energy-balls.jpg"
+    },
+    {
+      "id": "tomato-chickpea-pasta-with-goat-cheese-recipe",
+      "title": "Tomato & Chickpea Pasta with Goat Cheese",
+      "sourceUrl": "https://cookieandkate.com/tomato-chickpea-pasta-recipe/",
+      "sourceName": "Cookie and Kate",
+      "mealType": "dinner",
+      "diet": "vegetarian",
+      "cuisine": "Mediterranean",
+      "ingredients": [
+        {
+          "item": "short-cut pasta noodles",
+          "amount": 8,
+          "unit": "ounces",
+          "preparation": null
+        },
+        {
+          "item": "One 4 to 5 ounce log of goat cheese",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "cloves garlic, peeled but left whole",
+          "amount": 4,
+          "unit": "medium",
+          "preparation": null
+        },
+        {
+          "item": "(15 ounces) chickpeas, rinsed and drained, or 1 \u00bd cups cooked chickpeas",
+          "amount": 1,
+          "unit": "can",
+          "preparation": null
+        },
+        {
+          "item": "(4 cups) cherry tomatoes \u2013 smaller tomatoes are better!",
+          "amount": 2,
+          "unit": "pints",
+          "preparation": null
+        },
+        {
+          "item": "\u00bd cup Kalamata olives, pitted and roughly chopped (optional)",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "\u2153 cup extra-virgin olive oil",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Salt, to taste",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Freshly ground black pepper, to taste",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "Pinch of red pepper flakes (optional, for heat)",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        },
+        {
+          "item": "\u2153 cup thinly sliced fresh basil",
+          "amount": null,
+          "unit": null,
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Preheat the oven to 425 degrees Fahrenheit with a rack in the upper third of the oven. Bring a large pot of salted water to boil and cook the pasta until tender according to package directions, then drain and rinse the noodles well with cool water."
+        },
+        {
+          "step": 2,
+          "text": "Place the goat cheese in the center of a 9 by 13-inch baking dish. Arrange the garlic cloves in one corner so they\u2019re easier to find later. Add the chickpeas, tomatoes, and optional olives around the goat cheese, in that order. Then drizzle the olive oil all over the mixture. Sprinkle with a pinch of salt, several twists of pepper, and the red pepper flakes, if using."
+        },
+        {
+          "step": 3,
+          "text": "Bake for 20 minutes on the upper third rack, then place the dish on a heat-safe surface. Gently stir the goat cheese into the tomatoes and tuck the garlic cloves back down to the bottom of the dish."
+        },
+        {
+          "step": 4,
+          "text": "Return the dish to the oven and bake for 12 to 15 more minutes, until the tomatoes are juicy and shriveling and the goat cheese is starting to turn golden on top."
+        },
+        {
+          "step": 5,
+          "text": "Remove the dish from the oven. Carefully, using a fork, find each of the four garlic cloves and smash each one against the side of the pan. Gently swirl the cheese and tomatoes together."
+        },
+        {
+          "step": 6,
+          "text": "Carefully transfer all of the tomato mixture to the pot of rinsed and drained pasta. Taste, and add a pinch or two of salt if desired (if you omitted the olives, you may want even more)."
+        },
+        {
+          "step": 7,
+          "text": "Sprinkle all over with fresh basil. Serve warm, or let the pasta cool to room temperature before refrigerating it for later. Leftovers keep well, covered and refrigerated, for up to 4 days."
+        }
+      ],
+      "nutrition": {
+        "calories": 390.0,
+        "proteinGrams": 12.6,
+        "carbsGrams": 43.3,
+        "fatGrams": 19.5
+      },
+      "image": "https://cookieandkate.com/images/2023/09/tomato-chickpea-pasta-recipe-225x225.jpg"
+    }
+  ]
+}
