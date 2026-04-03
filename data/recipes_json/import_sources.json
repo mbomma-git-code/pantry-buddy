@@ -7,11 +7,291 @@
     "sourceName": "Minimalist Baker"
   },
   {
+    "url": "https://minimalistbaker.com/1-bowl-vegan-banana-oat-pancakes/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/super-fluffy-gluten-free-pancakes/",
+    "mealType": "breakfast",
+    "diet": "gluten-free",
+    "cuisine": "Dairy-Free, Gluten-Free",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/date-sweetened-apple-pie-oatmeal/",
+    "mealType": "breakfast",
+    "diet": "gluten-free",
+    "cuisine": "Gluten-Free, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/peach-oat-smoothie/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/easy-vegan-french-toast/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/savory-chickpea-pancakes-with-leek-and-mushrooms/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "Gluten-Free, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://www.noracooks.com/peanut-butter-overnight-oats/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-banana-muffins/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-pancakes/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-french-toast/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-blueberry-muffins/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-waffles/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.loveandlemons.com/overnight-oats-recipe/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/baked-oatmeal/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/idli-recipe-how-to-make-soft-idli/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://cookieandkate.com/healthy-carrot-muffins-recipe/",
+    "mealType": "breakfast",
+    "diet": "",
+    "cuisine": "American",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/kanda-poha-or-onion-poha/",
+    "mealType": "breakfast",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/poha-upma-recipe/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/rava-idli-recipe-quick-rava-idli/",
+    "mealType": "breakfast",
+    "diet": "vegetarian",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/masala-dosa-recipe-how-to-make-masala-dosa-recipe/",
+    "mealType": "breakfast",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
     "url": "https://www.loveandlemons.com/kale-salad/",
     "mealType": "lunch",
     "diet": "vegetarian",
     "cuisine": "American",
     "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/pasta-salad/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/chickpea-salad/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/quinoa-salad/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/black-bean-and-corn-salad/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/couscous-salad/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/minestrone-soup/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/lentil-salad/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-chicken-salad/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-cobb-salad/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-caesar-salad/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "Italian-inspired",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://cookieandkate.com/best-lentil-soup-recipe/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "Mediterranean",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://minimalistbaker.com/sweet-potato-chickpea-buddha-bowl/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "Gluten-Free, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/mediterranean-baked-sweet-potatoes/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free, Mediterranean, Middle Eastern-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://www.noracooks.com/broccoli-salad/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-pasta-salad/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "American, Italian",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/rajma-masala-recipe-restaurant-style/",
+    "mealType": "lunch",
+    "diet": "vegetarian",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/chana-masala/",
+    "mealType": "lunch",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/lemon-rice/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/vegetable-pulao-recipe-veg-pulao/",
+    "mealType": "lunch",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/dal-fry/",
+    "mealType": "lunch",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
   },
   {
     "url": "https://www.noracooks.com/peanut-butter-energy-balls/",
@@ -21,10 +301,290 @@
     "sourceName": "Nora Cooks"
   },
   {
+    "url": "https://www.noracooks.com/mexican-street-corn-dip/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Mexican-inspired",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://minimalistbaker.com/garlic-dill-sunflower-dip/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "Gluten-Free, Mediterranean-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://www.loveandlemons.com/hummus-recipe/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/guacamole-recipe/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/baba-ganoush/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/tzatziki-sauce/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/white-bean-dip/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://minimalistbaker.com/roasted-salsa-verde-30-minutes/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "Gluten-Free, Mexican-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://www.noracooks.com/restaurant-style-salsa/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "Mexican",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://cookieandkate.com/perfect-stovetop-popcorn-recipe/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "American",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-spinach-artichoke-dip/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://minimalistbaker.com/coconut-lime-energy-bites/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free, Grain-Free, Oil-Free, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/creamy-vegan-caramelized-onion-dip/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free, Middle Eastern-Inspired, Persian-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://cookieandkate.com/best-granola-bars-recipe/",
+    "mealType": "snack",
+    "diet": "glutenfree",
+    "cuisine": "American",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://cookieandkate.com/roasted-chickpeas-recipe/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Mediterranean",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/poha-chivda-recipe/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/khaman-dhokla/",
+    "mealType": "snack",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/masala-vada-recipe-masala-vadai/",
+    "mealType": "snack",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/bhel-puri-mumbai-bhel-puri/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/aloo-tikki-aloo-pattice-recipe-made-from-leftover-potatoes/",
+    "mealType": "snack",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
     "url": "https://cookieandkate.com/tomato-chickpea-pasta-recipe/",
     "mealType": "dinner",
     "diet": "vegetarian",
     "cuisine": "Mediterranean",
     "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://cookieandkate.com/spinach-artichoke-lasagna-recipe/",
+    "mealType": "dinner",
+    "diet": "vegetarian",
+    "cuisine": "Italian",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://cookieandkate.com/pasta-e-fagioli-recipe/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "Italian",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://cookieandkate.com/best-vegetable-lasagna-recipe/",
+    "mealType": "dinner",
+    "diet": "vegetarian",
+    "cuisine": "Italian",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://cookieandkate.com/thai-red-curry-recipe/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "Thai",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://cookieandkate.com/black-bean-sweet-potato-enchiladas/",
+    "mealType": "dinner",
+    "diet": "vegetarian",
+    "cuisine": "Mexican",
+    "sourceName": "Cookie and Kate"
+  },
+  {
+    "url": "https://www.loveandlemons.com/baked-ziti/",
+    "mealType": "dinner",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.loveandlemons.com/vegan-ramen/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "",
+    "sourceName": "Love and Lemons"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-butter-chicken/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "Indian",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-lasagna/",
+    "mealType": "dinner",
+    "diet": "",
+    "cuisine": "",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/tofu-stir-fry/",
+    "mealType": "dinner",
+    "diet": "",
+    "cuisine": "Asian-inspired",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/vegan-pot-pie/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "American",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://www.noracooks.com/the-best-vegan-tacos/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "Mexican-inspired",
+    "sourceName": "Nora Cooks"
+  },
+  {
+    "url": "https://minimalistbaker.com/vegan-bolognese-with-mushrooms-red-lentils/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free (optional), Italian-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/coconut-curried-golden-lentils-20-minutes/",
+    "mealType": "dinner",
+    "diet": "",
+    "cuisine": "Gluten-Free, Indian-Inspired, Sri Lankan-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://minimalistbaker.com/easy-1-pot-massaman-curry/",
+    "mealType": "dinner",
+    "diet": "vegan",
+    "cuisine": "Gluten-Free, Indian-Inspired, Thai-Inspired, Vegan",
+    "sourceName": "Minimalist Baker"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/palak-paneer/",
+    "mealType": "dinner",
+    "diet": "vegetarian",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/dal-makhani-restaurant-style-recipe/",
+    "mealType": "dinner",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/paneer-butter-masala/",
+    "mealType": "dinner",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/kadai-paneer-recipe-kadai-paneer/",
+    "mealType": "dinner",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
+  },
+  {
+    "url": "https://www.vegrecipesofindia.com/vegetable-biryani/",
+    "mealType": "dinner",
+    "diet": "glutenfree",
+    "cuisine": "Indian",
+    "sourceName": "Veg Recipes of India"
   }
 ]
