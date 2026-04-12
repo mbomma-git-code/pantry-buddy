@@ -1,0 +1,7 @@
+{
+  "name": "pantrybuddy-frontend",
+  "private": true,
+  "scripts": {
+    "test": "node tst/app_logic.test.js && node tst/index_html.test.js && node tst/meal_planner_model.test.js"
+  }
+}

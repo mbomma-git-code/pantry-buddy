@@ -428,8 +428,8 @@ def validate_request(body):
         _validate_string_list_field(field_name, body[field_name])
 
 
-def retrieve_from_kb(body):
-    # Preserve the retrieval boundary for a future knowledge-base integration.
+def build_planning_context(body):
+    # Assemble inputs for plan generation; extend here if external sources are added later.
     return {
         "recipes": load_all_recipes(),
         "request": {
@@ -440,8 +440,8 @@ def retrieve_from_kb(body):
     }
 
 
-def generate_structured_plan(body, retrieved_context):
-    recipes = retrieved_context.get("recipes") or load_all_recipes()
+def generate_structured_plan(body, planning_context):
+    recipes = planning_context.get("recipes") or load_all_recipes()
     return {"week": build_week_plan(recipes)}
 
 def lambda_handler(event, context):
@@ -476,8 +476,8 @@ def handle_v2(event):
         body = json.loads(event.get("body") or "{}")
         validate_request(body)
 
-        retrieved_context = retrieve_from_kb(body)
-        meal_plan = generate_structured_plan(body, retrieved_context)
+        planning_context = build_planning_context(body)
+        meal_plan = generate_structured_plan(body, planning_context)
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
         return response(400, {"error": str(exc)})
 

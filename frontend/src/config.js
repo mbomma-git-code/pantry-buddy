@@ -65,11 +65,6 @@ const CONFIG = {
   // HTTP Headers
   HEADERS: {
     'Content-Type': 'application/json'
-  },
-  
-  // UI Configuration
-  UI: {
-    tableColumns: ['Day', 'Breakfast', 'Lunch', 'Snack', 'Dinner']
   }
 };
 

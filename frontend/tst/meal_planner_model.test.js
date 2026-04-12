@@ -1,14 +1,15 @@
 const assert = require("node:assert/strict");
+const path = require("node:path");
 
 const {
   createEmptyNutrition,
   normalizeRecipe,
   normalizeWeekData
-} = require("./meal_planner_model.js");
+} = require(path.join(__dirname, "../src/meal_planner_model.js"));
 
-function runTest(name, callback) {
+function runTest(name, fn) {
   try {
-    callback();
+    fn();
     console.log(`PASS ${name}`);
   } catch (error) {
     console.error(`FAIL ${name}`);

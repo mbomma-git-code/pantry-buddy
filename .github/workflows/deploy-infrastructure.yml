@@ -69,8 +69,8 @@ jobs:
             echo "WebsiteBucketName output not found for stack $STACK"
             exit 1
           fi
-          echo "Deploying frontend/ to s3://$WEBSITE_BUCKET"
-          aws s3 sync frontend/ "s3://$WEBSITE_BUCKET/" --delete --region "$REGION"
+          echo "Deploying frontend/src/ to s3://$WEBSITE_BUCKET"
+          aws s3 sync frontend/src/ "s3://$WEBSITE_BUCKET/" --delete --region "$REGION"
           echo "Frontend deployment complete."
 
       - name: Verify AWS resources

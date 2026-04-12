@@ -9,7 +9,7 @@ The codebase has been refactored to use centralized configuration files, making 
 ## Configuration Files
 
 ### Frontend Configuration
-- **File**: `frontend/config.js`
+- **File**: `frontend/src/config.js`
 - **Key Setting**: `API_VERSION` (default: `'v2'`)
 
 ### Backend Configuration
@@ -21,7 +21,7 @@ The codebase has been refactored to use centralized configuration files, making 
 ### Option 1: Change Configuration File (Recommended)
 
 #### Frontend
-Edit `frontend/config.js`:
+Edit `frontend/src/config.js`:
 ```javascript
 const CONFIG = {
   API_VERSION: 'v2',  // Change from 'v1' to 'v2'
@@ -60,7 +60,7 @@ Or in AWS Lambda console:
 
 ## Configuration Structure
 
-### Frontend (`frontend/config.js`)
+### Frontend (`frontend/src/config.js`)
 ```javascript
 const CONFIG = {
   API_VERSION: 'v2',
@@ -84,7 +84,7 @@ API_ENDPOINTS = {
 ## Adding New Versions
 
 ### Step 1: Update Frontend Config
-Add new version to `frontend/config.js`:
+Add new version to `frontend/src/config.js`:
 ```javascript
 ENDPOINTS: {
   v1: { generateMealPlan: '/generate-meal-plan' },

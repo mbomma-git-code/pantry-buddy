@@ -6,12 +6,12 @@ This folder defines the AWS infrastructure for PantryBuddy using **AWS CDK** (Ty
 
 | Resource | Purpose |
 |----------|---------|
-| **WebsiteBucket** | S3 bucket with static website hosting for the frontend (index.html, app.js, config.js). |
+| **WebsiteBucket** | S3 bucket with static website hosting for the frontend (`frontend/src`: index.html, app.js, config.js). |
 | **DataBucket** | S3 bucket holding recipe JSON files; private, only Lambda has read access. |
 | **MealPlanFunction** | Lambda (Python 3.11) that reads recipes from DataBucket and returns a weekly meal plan. |
 | **MealPlanApi** | API Gateway REST API with `POST /generate-meal-plan` and CORS. |
 | **DeployRecipeData** | Copies `data/recipes_json/*.json` into DataBucket under `recipes_json/`. |
-| **DeployFrontend** | Copies `frontend/*` into WebsiteBucket on each deploy. |
+| **DeployFrontend** | Copies `frontend/src/*` into WebsiteBucket on each deploy. |
 
 You can replace the manual S3 bucket you used for static hosting with the **WebsiteBucket** created by this stack (see “Using your existing bucket” below if you prefer to keep the current bucket).
 
@@ -50,7 +50,7 @@ First-time deploy will create the two S3 buckets, Lambda, API Gateway, and deplo
 ## After first deploy
 
 1. **Update frontend API URL**  
-   Set `frontend/config.js` → `API_BASE_URL` to the **ApiEndpoint** value (e.g. `https://xxxx.execute-api.us-east-2.amazonaws.com/prod/`).  
+   Set `frontend/src/config.js` → `API_BASE_URL` to the **ApiEndpoint** value (e.g. `https://xxxx.execute-api.us-east-2.amazonaws.com/prod/`).  
    Then redeploy the frontend (either run `cdk deploy` again or your existing CI that syncs to S3).
 
 2. **Optional: Keep using your existing static hosting bucket**  

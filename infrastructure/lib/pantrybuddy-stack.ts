@@ -12,7 +12,7 @@ export class PantryBuddyStack extends cdk.Stack {
 
     const backendPath = path.join(__dirname, '../../backend');
     const recipeDataPath = path.join(__dirname, '../../data/recipes_json');
-    const frontendPath = path.join(__dirname, '../../frontend');
+    const frontendPath = path.join(__dirname, '../../frontend/src');
 
     // --- S3: Static website bucket (frontend) ---
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {

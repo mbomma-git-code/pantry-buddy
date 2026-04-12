@@ -122,8 +122,8 @@ Browser -> Local adapter (`backend/local_adapter.py`) -> `lambda_handler()`
   - `load_all_recipes()`: Loads meal categories from the canonical artifact when available, otherwise from legacy indexes
   - `build_week_plan(recipes)`: Constructs 7-day meal plan
   - `validate_request(body)`: Validates optional request fields
-  - `retrieve_from_kb(body)`: Preserves retrieval boundary for future knowledge integrations
-  - `generate_structured_plan(body, retrieved_context)`: Returns the logical `week` payload
+  - `build_planning_context(body)`: Loads recipes and request-scoped fields used for planning; can be extended for additional sources later
+  - `generate_structured_plan(body, planning_context)`: Returns the logical `week` payload
   - `handle_v2(event)`: v2-compatible request path with validation/retrieval hooks
  - **Compatibility Behavior**:
    - `RECIPE_COMPATIBILITY_MODE=indexes` forces legacy `breakfast/lunch/snack/dinner.json` reads
@@ -246,7 +246,7 @@ flowchart TD
     C --> D[API Gateway prod stage]
     D --> E[Lambda lambda_handler]
     E --> F[handle_v2 parses and validates request]
-    F --> G[retrieve_from_kb loads recipe context]
+    F --> G[build_planning_context loads recipe context]
     G --> H[generate_structured_plan builds week array]
     H --> I[Lambda returns HTTP response with CORS headers]
     I --> J[Frontend parses JSON body]
@@ -440,7 +440,7 @@ Content-Type: application/json
 2. CDK deploy updates stack resources.
 3. Stack deploy publishes recipe JSON to the data bucket and can deploy frontend assets to the website bucket.
 4. Workflow resolves `WebsiteBucketName` from stack outputs.
-5. Workflow syncs `frontend/` to the stack website bucket to ensure the latest static assets are published.
+5. Workflow syncs `frontend/src/` to the stack website bucket to ensure the latest static assets are published.
 6. Workflow verifies stack, buckets, Lambda, and API Gateway outputs.
 
 ### 9.2 Merge-To-Prod Readiness Checklist
@@ -448,7 +448,7 @@ Content-Type: application/json
 2. Confirm `data/recipes_json/recipes.json` and the derived `breakfast.json`, `lunch.json`, `snack.json`, and `dinner.json` files were regenerated from the reviewed source manifest and remain non-empty for every meal type.
 3. Spot-check the local API response from `/v2/generate-meal-plan` and confirm recipe detail objects include `sourceUrl` and `sourceName`.
 4. Confirm the frontend renders recipe attribution correctly by opening at least two recipe cards and verifying the visible source label and outbound link target.
-5. Verify the hardcoded production API base URL in `frontend/config.js` still matches the current deployed API Gateway base path or update it in the same branch before merge.
+5. Verify the hardcoded production API base URL in `frontend/src/config.js` still matches the current deployed API Gateway base path or update it in the same branch before merge.
 6. Review the GitHub Actions trigger paths and ensure the branch contains the backend, frontend, and `data/recipes_json/` changes that must be published by the existing `Deploy Infrastructure (CDK)` workflow after merge to `main`.
 
 Recommended local verification commands:
@@ -465,7 +465,7 @@ flowchart TD
     B --> C[GitHub Actions Deploy Infrastructure CDK workflow]
     C --> D[CDK deploy updates stack resources]
     D --> E[Recipe JSON artifacts published to data bucket]
-    E --> F[frontend/ synced to WebsiteBucketName]
+    E --> F[frontend/src/ synced to WebsiteBucketName]
     F --> G[Workflow verifies stack outputs and core AWS resources]
     G --> H[Run production smoke test]
 ```

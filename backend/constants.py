@@ -21,12 +21,3 @@ MEAL_TYPES = [
     "snack",
     "dinner"
 ]
-
-# Response field names
-RESPONSE_FIELDS = {
-    'WEEK': 'week',
-    'DAY': 'day',
-    'STATUS_CODE': 'statusCode',
-    'HEADERS': 'headers',
-    'BODY': 'body'
-}

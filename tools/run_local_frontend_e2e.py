@@ -27,7 +27,7 @@ except ImportError:  # pragma: no cover - handled at runtime
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-FRONTEND_DIR = PROJECT_ROOT / "frontend"
+FRONTEND_DIR = PROJECT_ROOT / "frontend" / "src"
 BACKEND_DIR = PROJECT_ROOT / "backend"
 DEFAULT_FRONTEND_PORT = 8080
 DEFAULT_ADAPTER_PORT = 8000
