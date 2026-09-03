@@ -124,10 +124,13 @@ jobs:
 
           echo "=== 1. CloudFormation stack ==="
           STATUS=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query 'Stacks[0].StackStatus' --output text)
-          if [[ "$STATUS" != "CREATE_COMPLETE" && "$STATUS" != "UPDATE_COMPLETE" ]]; then
-            echo "Unexpected stack status: $STATUS"
-            exit 1
-          fi
+          case "$STATUS" in
+            CREATE_COMPLETE|UPDATE_COMPLETE|UPDATE_COMPLETE_CLEANUP_IN_PROGRESS) ;;
+            *)
+              echo "Unexpected stack status: $STATUS"
+              exit 1
+              ;;
+          esac
           echo "Stack $STACK status: $STATUS"
 
           echo "=== 2. Stack outputs (S3, API, KB) ==="
