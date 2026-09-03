@@ -172,8 +172,11 @@ jobs:
           echo "API Gateway REST API exists: $API_ID"
 
           echo "=== 6. Bedrock Knowledge Base ==="
-          aws bedrock-agent get-knowledge-base --knowledge-base-id "$KB_ID" --region "$REGION" \
-            --query '{Name:knowledgeBase.name,Status:knowledgeBase.status,Id:knowledgeBase.knowledgeBaseId}' --output table
+          if ! aws bedrock-agent get-knowledge-base --knowledge-base-id "$KB_ID" --region "$REGION" \
+            --query '{Name:knowledgeBase.name,Status:knowledgeBase.status,Id:knowledgeBase.knowledgeBaseId}' --output table; then
+            echo "Warning: could not call bedrock-agent get-knowledge-base (check GitHubCDKDeployRole bedrock permissions)" >&2
+            exit 1
+          fi
           LAMBDA_ENV_KB=$(aws lambda get-function-configuration --function-name "$MEAL_PLAN_LAMBDA" --region "$REGION" \
             --query "Environment.Variables.KNOWLEDGE_BASE_ID" --output text)
           if [[ "$LAMBDA_ENV_KB" != "$KB_ID" ]]; then
