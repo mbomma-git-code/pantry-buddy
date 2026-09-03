@@ -3,7 +3,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[1] / "backend"
@@ -209,6 +209,115 @@ class LambdaFunctionCompatibilityTests(unittest.TestCase):
         self.assertEqual(monday_breakfast["sourceName"], "Pantry Buddy Test Kitchen")
         self.assertEqual(monday_breakfast["sourceUrl"], "https://example.test/berry-oats")
         self.assertEqual(monday_breakfast["ingredients"][0]["item"], "Oats")
+
+    def test_handle_v3_chat_valid_request_returns_grounded_answer(self):
+        event = {
+            "resource": "/v3/chat",
+            "path": "/v3/chat",
+            "body": json.dumps(
+                {"messages": [{"role": "user", "content": "Tell me about berry oats"}]}
+            ),
+        }
+
+        with patch.object(LAMBDA, "load_canonical_recipe_artifact", return_value=CANONICAL_ARTIFACT), patch.dict(
+            "os.environ", {"RAG_GENERATOR": "fake", "KNOWLEDGE_BASE_ID": ""}, clear=False
+        ):
+            # Reload generator mode via env for this process path.
+            import generators as generators_mod
+
+            response = LAMBDA.lambda_handler(event, context=None)
+
+        payload = json.loads(response["body"])
+        self.assertEqual(response["statusCode"], 200)
+        self.assertIn("answer", payload)
+        self.assertTrue(payload["citations"])
+        self.assertEqual(payload["citations"][0]["recipeId"], "berry-oats")
+        self.assertIn("Berry Oats", payload["answer"])
+        del generators_mod
+
+    def test_handle_v3_chat_with_kb_skips_catalog_load(self):
+        event = {
+            "resource": "/v3/chat",
+            "path": "/v3/chat",
+            "body": json.dumps(
+                {"messages": [{"role": "user", "content": "berry oats"}]}
+            ),
+        }
+
+        from retrievers import RetrievedChunk
+
+        class KbRetriever:
+            def retrieve(self, query, *, filters=None, top_k=8):
+                return [
+                    RetrievedChunk(
+                        text="title: Berry Oats\nIngredients:\n- oats",
+                        score=0.9,
+                        recipe_id="berry-oats",
+                        title="Berry Oats",
+                        source_url="https://example.test/berry-oats",
+                        source_name="Pantry Buddy Test Kitchen",
+                    )
+                ]
+
+        load_catalog = MagicMock(side_effect=AssertionError("catalog should not load"))
+        with patch.object(LAMBDA, "load_canonical_recipe_artifact", load_catalog), patch.dict(
+            "os.environ",
+            {"RAG_GENERATOR": "fake", "KNOWLEDGE_BASE_ID": "kb-test"},
+            clear=False,
+        ), patch("rag_agent.get_retriever", return_value=KbRetriever()):
+            response = LAMBDA.lambda_handler(event, context=None)
+
+        load_catalog.assert_not_called()
+        payload = json.loads(response["body"])
+        self.assertEqual(response["statusCode"], 200)
+        self.assertEqual(payload["citations"][0]["recipeId"], "berry-oats")
+        self.assertIn("Berry Oats", payload["answer"])
+
+    def test_handle_v3_chat_low_recall_returns_refusal(self):
+        event = {
+            "resource": "/v3/chat",
+            "path": "/v3/chat",
+            "body": json.dumps(
+                {
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": "zzzznonexistentingredientqqq",
+                        }
+                    ]
+                }
+            ),
+        }
+
+        with patch.object(LAMBDA, "load_canonical_recipe_artifact", return_value=CANONICAL_ARTIFACT), patch.dict(
+            "os.environ", {"RAG_GENERATOR": "fake", "KNOWLEDGE_BASE_ID": ""}, clear=False
+        ):
+            response = LAMBDA.lambda_handler(event, context=None)
+
+        payload = json.loads(response["body"])
+        self.assertEqual(response["statusCode"], 200)
+        self.assertEqual(payload.get("citations"), [])
+        self.assertIn("no matching grounded content", payload["answer"].lower())
+
+    def test_handle_v3_chat_invalid_body_returns_400(self):
+        event = {
+            "resource": "/v3/chat",
+            "path": "/v3/chat",
+            "body": json.dumps({"messages": []}),
+        }
+        response = LAMBDA.lambda_handler(event, context=None)
+        self.assertEqual(response["statusCode"], 400)
+
+    def test_handle_v3_suggest_meals_valid_returns_not_implemented(self):
+        event = {
+            "resource": "/v3/suggest-meals",
+            "path": "/v3/suggest-meals",
+            "body": json.dumps({"query": "light lunches under 30 minutes"}),
+        }
+        response = LAMBDA.lambda_handler(event, context=None)
+        payload = json.loads(response["body"])
+        self.assertEqual(response["statusCode"], 501)
+        self.assertEqual(payload.get("operation"), "suggest_meals")
 
 
 if __name__ == "__main__":

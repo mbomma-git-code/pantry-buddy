@@ -30,18 +30,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--input-dir",
-        default="data/recipes_text",
-        help="Directory containing legacy text recipe seed files.",
+        required=True,
+        help="Directory containing legacy .txt recipe seed files (Title/Ingredients/Instructions format).",
     )
     parser.add_argument(
         "--output",
         default="data/recipes_json/recipes.json",
         help="Path to the canonical recipe artifact to write.",
-    )
-    parser.add_argument(
-        "--sample-output",
-        default="data/recipes_json/recipes.sample.json",
-        help="Path to the sample canonical artifact to write.",
     )
     parser.add_argument(
         "--schema",
@@ -52,12 +47,6 @@ def parse_args() -> argparse.Namespace:
         "--source-name",
         default="PantryBuddy Seed Data",
         help="Source label to assign to locally seeded recipes.",
-    )
-    parser.add_argument(
-        "--sample-size-per-meal",
-        type=int,
-        default=2,
-        help="How many recipes per meal type to include in recipes.sample.json.",
     )
     return parser.parse_args()
 
@@ -344,17 +333,6 @@ def build_artifact(recipes: list[dict[str, Any]]) -> dict[str, Any]:
     return payload
 
 
-def build_sample_recipes(
-    recipes: list[dict[str, Any]],
-    sample_size_per_meal: int,
-) -> list[dict[str, Any]]:
-    sample: list[dict[str, Any]] = []
-    for meal_type in MEAL_TYPES:
-        meal_recipes = [recipe for recipe in recipes if recipe["mealType"] == meal_type]
-        sample.extend(meal_recipes[:sample_size_per_meal])
-    return sample
-
-
 def build_indexes(recipes: list[dict[str, Any]]) -> dict[str, list[str]]:
     indexes = {meal_type: [] for meal_type in MEAL_TYPES}
     for recipe in recipes:
@@ -378,7 +356,6 @@ def main() -> int:
     args = parse_args()
     input_dir = Path(args.input_dir).resolve()
     output_path = Path(args.output).resolve()
-    sample_output_path = Path(args.sample_output).resolve()
     schema_path = Path(args.schema).resolve()
 
     if not input_dir.exists():
@@ -393,18 +370,14 @@ def main() -> int:
     recipes.sort(key=lambda recipe: (recipe["mealType"], recipe["title"]))
 
     artifact = build_artifact(recipes)
-    sample_artifact = build_artifact(
-        build_sample_recipes(recipes, sample_size_per_meal=args.sample_size_per_meal)
-    )
     indexes = build_indexes(recipes)
 
     write_json(output_path, artifact)
-    write_json(sample_output_path, sample_artifact)
     for meal_type, titles in indexes.items():
         write_json(output_path.parent / f"{meal_type}.json", titles)
 
     print(
-        f"Wrote {len(recipes)} canonical recipe(s), sample artifact, and "
+        f"Wrote {len(recipes)} canonical recipe(s) and "
         f"{len(indexes)} meal-type indexes to {output_path.parent}."
     )
     return 0

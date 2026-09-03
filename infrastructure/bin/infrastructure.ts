@@ -11,7 +11,8 @@ new PantryBuddyStack(app, 'PantryBuddyStack', {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION || 'us-east-2',
   },
-  description: 'PantryBuddy: S3 static hosting, Lambda meal-plan API, recipe data',
+  description:
+    'PantryBuddy: S3 hosting, Lambda meal-plan + v3 RAG chat, Bedrock KB (OpenSearch Serverless)',
 });
 
 new BedrockAgentStack(app, 'PantryBuddyBedrockAgentStack', {

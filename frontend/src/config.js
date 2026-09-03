@@ -59,6 +59,11 @@ const CONFIG = {
     },
     v2: {
       generateMealPlan: '/v2/generate-meal-plan'
+    },
+    // RAG v3: separate from the weekly planner; use getApiUrl with API_VERSION 'v3' when calling.
+    v3: {
+      chat: '/v3/chat',
+      suggestMeals: '/v3/suggest-meals'
     }
   },
   
@@ -70,16 +75,17 @@ const CONFIG = {
 
 /**
  * Get the full API URL for a given endpoint
- * @param {string} endpointName - Name of the endpoint (e.g., 'generateMealPlan')
+ * @param {string} endpointName - Name of the endpoint (e.g., 'generateMealPlan', 'chat')
+ * @param {string} [versionOverride] - Optional API version key (e.g., 'v3' for RAG routes)
  * @returns {string} Full API URL
  */
-function getApiUrl(endpointName) {
-  const version = CONFIG.API_VERSION;
+function getApiUrl(endpointName, versionOverride) {
+  const version = versionOverride ?? CONFIG.API_VERSION;
   const endpoint = CONFIG.ENDPOINTS[version]?.[endpointName];
-  
+
   if (!endpoint) {
     throw new Error(`Endpoint '${endpointName}' not found for version '${version}'`);
   }
-  
+
   return `${CONFIG.API_BASE_URL}${endpoint}`;
 }

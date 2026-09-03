@@ -7,7 +7,8 @@ import os
 from pathlib import Path
 
 # API Version Configuration
-# Change this to switch between API versions
+# Change this to switch the default *meal-plan* client version (v1 legacy path, v2 planner).
+# RAG v3 uses dedicated routes (/v3/chat, /v3/suggest-meals) regardless of this value.
 API_VERSION = os.environ.get('API_VERSION', 'v2')  # Options: 'v1', 'v2'
 
 # AWS Configuration
@@ -50,7 +51,11 @@ API_ENDPOINTS = {
     },
     'v2': {
         'generate_meal_plan': '/v2/generate-meal-plan'
-    }
+    },
+    'v3': {
+        'chat': '/v3/chat',
+        'suggest_meals': '/v3/suggest-meals',
+    },
 }
 
 # HTTP Response Configuration
@@ -60,4 +65,25 @@ HTTP_CONFIG = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
     }
+}
+
+# RAG v3 configuration (chat retrieve-then-generate)
+# When KNOWLEDGE_BASE_ID is set, Lambda uses Bedrock Retrieve; otherwise lexical catalog search.
+DEFAULT_GENERATOR_MODEL_ID = 'anthropic.claude-3-5-haiku-20241022-v1:0'
+DEFAULT_EMBEDDING_MODEL_ID = 'amazon.titan-embed-text-v2:0'
+
+RAG_CONFIG = {
+    # auto | bedrock | extract | fake
+    'GENERATOR_MODE': os.environ.get('RAG_GENERATOR', 'auto').strip().lower(),
+    'GENERATOR_MODEL_ID': os.environ.get(
+        'GENERATOR_MODEL_ID',
+        DEFAULT_GENERATOR_MODEL_ID,
+    ),
+    'EMBEDDING_MODEL_ID': os.environ.get(
+        'EMBEDDING_MODEL_ID',
+        DEFAULT_EMBEDDING_MODEL_ID,
+    ),
+    'KNOWLEDGE_BASE_ID': os.environ.get('KNOWLEDGE_BASE_ID', '').strip(),
+    'MAX_TOKENS': int(os.environ.get('RAG_MAX_TOKENS', '1024')),
+    'TEMPERATURE': float(os.environ.get('RAG_TEMPERATURE', '0.2')),
 }

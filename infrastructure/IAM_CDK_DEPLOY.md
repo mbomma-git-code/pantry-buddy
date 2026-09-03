@@ -10,7 +10,7 @@ arn:aws:ssm:REGION:ACCOUNT:parameter/cdk-bootstrap/hnb659fds/version
 because no identity-based policy allows the ssm:GetParameter action
 ```
 
-CDK needs to read the bootstrap version from SSM before deploying. The role must also be allowed to create/update CloudFormation stacks, S3 buckets, Lambda, API Gateway, IAM roles, and related resources. For **first-time bootstrap**, the role needs `ssm:PutParameter` so CDK can create the bootstrap version parameter. Bootstrap also creates an **ECR** repository for container image assets (`cdk-hnb659fds-container-assets-...`), so the role needs ECR permissions or bootstrap will fail with `ecr:CreateRepository` access denied.
+CDK needs to read the bootstrap version from SSM before deploying. The role must also be allowed to create/update CloudFormation stacks, S3 buckets, Lambda, API Gateway, IAM roles, **Bedrock Knowledge Bases**, **OpenSearch Serverless**, and related resources. For **first-time bootstrap**, the role needs `ssm:PutParameter` so CDK can create the bootstrap version parameter. Bootstrap also creates an **ECR** repository for container image assets (`cdk-hnb659fds-container-assets-...`), so the role needs ECR permissions or bootstrap will fail with `ecr:CreateRepository` access denied.
 
 ## Fix: add this policy to the role used by the workflow
 
@@ -54,7 +54,10 @@ Attach an **inline policy** (or a dedicated managed policy) to the role referenc
         "lambda:*",
         "apigateway:*",
         "logs:*",
-        "sts:GetCallerIdentity"
+        "sts:GetCallerIdentity",
+        "bedrock:*",
+        "aoss:*",
+        "iam:CreateServiceLinkedRole"
       ],
       "Resource": "*"
     },

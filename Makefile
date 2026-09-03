@@ -5,6 +5,10 @@ API_BASE_URL ?=
 SLOW_MO_MS ?=
 HOLD_OPEN_SECONDS ?=
 ARTIFACTS_DIR ?=
+DATA_BUCKET ?=
+KNOWLEDGE_BASE_ID ?=
+DATA_SOURCE_ID ?=
+AWS_REGION ?= us-east-2
 QA_ARGS :=
 
 ifneq ($(strip $(FRONTEND_URL)),)
@@ -27,7 +31,26 @@ ifneq ($(strip $(ARTIFACTS_DIR)),)
 QA_ARGS += --artifacts-dir "$(ARTIFACTS_DIR)"
 endif
 
-.PHONY: setup-local-browser-tests qa-local-frontend qa-local-frontend-reuse qa-local-frontend-headed
+.PHONY: setup-local-browser-tests qa-local-frontend qa-local-frontend-reuse qa-local-frontend-headed build-kb-index sync-kb-index eval-rag
+
+# Local lexical recall + citation attribution against data/kb/golden_queries.json
+eval-rag:
+	$(PYTHON) -m unittest tests.test_rag_eval -v
+
+build-kb-index:
+	$(PYTHON) tools/build_kb_index.py \
+		--input data/recipes_json/recipes.json \
+		--output-dir data/kb
+
+# Requires: DATA_BUCKET, and for ingestion KNOWLEDGE_BASE_ID + DATA_SOURCE_ID (stack outputs).
+sync-kb-index: build-kb-index
+	@test -n "$(DATA_BUCKET)" || (echo "Set DATA_BUCKET=<DataBucketName stack output>" >&2; exit 1)
+	$(PYTHON) tools/sync_kb_index.py \
+		--local-dir data/kb \
+		--bucket "$(DATA_BUCKET)" \
+		--region "$(AWS_REGION)" \
+		$(if $(KNOWLEDGE_BASE_ID),--knowledge-base-id "$(KNOWLEDGE_BASE_ID)",) \
+		$(if $(DATA_SOURCE_ID),--data-source-id "$(DATA_SOURCE_ID)",)
 
 setup-local-browser-tests:
 	$(PYTHON) -m venv .venv

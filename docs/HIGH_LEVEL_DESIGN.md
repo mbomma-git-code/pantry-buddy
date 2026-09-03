@@ -118,10 +118,6 @@ PantryBuddy is a web-based meal planning application that generates personalized
   - `dinner.json`: Dinner recipe options
 - **Format**: JSON array, e.g., `["Recipe 1", "Recipe 2", ...]`
 
-#### 3.3.2 Recipe Text Files (`data/recipes_text/`)
-- **Purpose**: Detailed recipe instructions (future use)
-- **Format**: Plain text files with recipe details
-
 ---
 
 ## 4. Data Flow
@@ -230,7 +226,6 @@ PantryBuddy/
 │   │   ├── lunch.json
 │   │   ├── snack.json
 │   │   └── dinner.json
-│   └── recipes_text/        # Detailed recipe text files
 │
 ├── docs/                    # Documentation
 │   └── HIGH_LEVEL_DESIGN.md

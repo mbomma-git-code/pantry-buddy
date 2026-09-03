@@ -78,7 +78,6 @@ For blog extraction, prefer `schema.org/Recipe` JSON-LD in the page first, then 
 - Update [docs/HIGH_LEVEL_DESIGN_v2.md](/Users/mounitha/Desktop/PantryBuddy/docs/HIGH_LEVEL_DESIGN_v2.md) to document the new recipe schema and import workflow.
 - Add an importer script under a utility folder such as `tools/` or `scripts/`.
 - Add new structured recipe data files under [data/recipes_json](/Users/mounitha/Desktop/PantryBuddy/data/recipes_json).
-- Optionally repurpose or regenerate [data/recipes_text](/Users/mounitha/Desktop/PantryBuddy/data/recipes_text) from canonical data if you still want human-readable recipe files.
 
 ## Implementation phases
 

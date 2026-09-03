@@ -1,9 +1,9 @@
 # PantryBuddy - High-Level Design Documentation
 ## Weekly Meal Planner (V2 Update)
 
-**Version:** 2.4  
-**Date:** March 2026  
-**Status:** V2 Production-Aligned
+**Version:** 2.6  
+**Date:** September 2026  
+**Status:** V2 Production-Aligned (V3 RAG: KB + Lambda Retrieve/InvokeModel wired)
 
 ---
 
@@ -82,6 +82,17 @@ Browser -> Local adapter (`backend/local_adapter.py`) -> `lambda_handler()`
    - Canonical recipe artifact plus derived compatibility indexes in `recipes_json/`
    - Durable object storage for runtime reads
 
+### 2.3 V3 RAG stack (decided)
+
+The following choices implement the RAG v3 plan using AWS-native components. They are fixed for the initial v3 implementation; revisiting them is appropriate only if requirements change (scale, cost, or regional model availability).
+
+| Area | Decision | Rationale |
+|------|----------|-----------|
+| **Retrieval platform** | **Amazon Bedrock Knowledge Bases** | Managed ingestion from S3, built-in chunking/sync, and the `Retrieve` API for Lambda—avoids operating a separate vector database product and keeps IAM and billing in one AWS surface. A self-hosted or third-party vector store is **out of scope** for v3 unless a future requirement cannot be met by Bedrock KB. |
+| **Vector store** | **Amazon OpenSearch Serverless** | First-class Bedrock KB integration, hybrid vector + text search, and no PostgreSQL operations burden for what is primarily retrieval. **Amazon Aurora PostgreSQL with the `pgvector` extension** remains a valid alternative if PantryBuddy later needs relational co-location or existing Aurora investment; it is not the default for v3. |
+| **Embedding model** | **Amazon Titan Text Embeddings V2** (`amazon.titan-embed-text-v2:0`) | Supported for Knowledge Bases, tuned for retrieval workloads, configurable dimensions (default 1,024). Confirm availability in the deployment Region before go-live. |
+| **Orchestration** | **Lambda REST: Retrieve → InvokeModel** | The v3 API uses API Gateway + Lambda calling `bedrock:Retrieve` (Knowledge Base) to assemble grounded context with citations, then `bedrock:InvokeModel` for the generator LLM. **Amazon Bedrock Agents are not the primary v3 path**—deterministic routing, integration tests, and local-debug patterns stay simpler in code. The existing optional Bedrock Agent stack may attach the **same** Knowledge Base later for a separate conversational UX without changing the corpus. |
+
 ---
 
 ## 3. Component Details
@@ -158,12 +169,19 @@ Browser -> Local adapter (`backend/local_adapter.py`) -> `lambda_handler()`
 
 #### 3.3.2 Canonical Structured Recipe Artifact
 - `recipes.schema.json`
-- `recipes.sample.json`
 - `recipes.json`
 - **Purpose**: Define the future canonical recipe object model used by offline import/review workflows
 - **Compatibility Model**: The canonical artifact is now the preferred runtime source in `auto` mode, while the meal-type index files remain generated compatibility artifacts and fallbacks
 
-#### 3.3.3 Canonical Recipe Shape
+#### 3.3.3 Knowledge Base structured corpus (`data/kb/`)
+
+Offline CLI [`tools/build_kb_index.py`](../tools/build_kb_index.py) renders each canonical recipe into a retrieval-friendly text document plus a Bedrock metadata sidecar under `data/kb/structured/`, and writes `data/kb/kb_manifest.json` for content-hash diffs. This local layout matches the S3 prefix `kb/structured/`. Chunking rules and citation metadata are specified in [`RAG_V3_INDEX_PIPELINE.md`](RAG_V3_INDEX_PIPELINE.md).
+
+CDK (`RecipeKnowledgeBase`) creates a Bedrock Knowledge Base with OpenSearch Serverless vectors and Titan Text Embeddings V2 (`amazon.titan-embed-text-v2:0`, 1024 dimensions, available in us-east-2). [`tools/sync_kb_index.py`](../tools/sync_kb_index.py) upserts objects by manifest hash and starts an ingestion job. Stack outputs: `KnowledgeBaseId`, `KnowledgeBaseDataSourceId`, `KbSyncRoleArn`.
+
+Local RAG quality checks use [`data/kb/golden_queries.json`](../data/kb/golden_queries.json) and [`tests/test_rag_eval.py`](../tests/test_rag_eval.py) (`make eval-rag`) for recall and citation attribution; see [`RAG_V3_INDEX_PIPELINE.md`](RAG_V3_INDEX_PIPELINE.md) §8.
+
+#### 3.3.4 Canonical Recipe Shape
 
 | Field | Type | Required | Description |
 |------|------|----------|-------------|
@@ -260,7 +278,7 @@ flowchart TD
     A[Curated source manifest or legacy text recipes] --> B[Offline tools in tools/]
     B --> C[Normalize into canonical PantryBuddy recipe objects]
     C --> D[Validate against recipes.schema.json]
-    D --> E[Write recipes.json and recipes.sample.json]
+    D --> E[Write recipes.json]
     E --> F[Generate breakfast/lunch/snack/dinner indexes]
     F --> G[Human review in git diff / PR]
     G --> H[Deploy data artifacts to S3]
@@ -339,7 +357,7 @@ Content-Type: application/json
 
 ### 4.4 Offline Recipe Data Workflow
 1. Seed or import recipes offline, never during request handling.
-2. Use `tools/generate_recipe_artifacts.py` to parse legacy text recipe seeds in `data/recipes_text/` into `recipes.json`, `recipes.sample.json`, and derived meal indexes.
+2. Use `tools/generate_recipe_artifacts.py --input-dir <dir>` to parse legacy `.txt` recipe seeds into `recipes.json` and derived meal indexes.
 3. Use `tools/import_blog_recipes.py --sources <manifest>` to fetch curated blog pages, prefer `schema.org/Recipe` metadata, and fall back to lightweight HTML parsing only when needed.
 4. Keep source manifests reviewable in JSON form, using fields such as `url`, `mealType`, `diet`, `cuisine`, and `sourceName`.
 5. Validate generated artifacts against `recipes.schema.json`, then review canonical fields like `sourceUrl`, `sourceName`, `ingredients`, `instructions`, `nutrition`, and `mealType` before merge/deploy.
@@ -351,7 +369,7 @@ Content-Type: application/json
 - Preserve `sourceUrl` and `sourceName` for attribution and traceability.
 - Treat importer output as reviewable content, not trusted production data.
 - Ensure every meal type remains non-empty so both canonical runtime grouping and compatibility index generation succeed.
-- Prefer `recipes.sample.json` for lightweight spot checks and `recipes.json` for full review.
+- Use `recipes.json` for review; trim or filter locally if you need a smaller diff for spot checks.
 
 ---
 
@@ -512,6 +530,9 @@ Production smoke-test focus:
 | 2.2 | Mar 2026 | Development Team | Added canonical structured recipe schema, sample artifact format, and compatibility guidance for future recipe imports |
 | 2.3 | Mar 2026 | Development Team | Documented canonical-first runtime loading, offline import pipeline, schema review flow, and compatibility fallback behavior |
 | 2.4 | Mar 2026 | Development Team | Added merge-to-prod readiness checklist, merge-triggered deployment flow, and production smoke-test guidance |
+| 3.0 | Apr 2026 | Development Team | Adopted V3 RAG stack: uses Amazon Bedrock Knowledge Bases for retrieval, OpenSearch Serverless as vector store, Titan Embeddings v2, Lambda orchestrates Retrieve then InvokeModel (Bedrock Agent support available, but not default path) |
+| 3.1 | Sep 2026 | Development Team | Documented local KB structured corpus builder (`tools/build_kb_index.py` → `data/kb/`) |
+| 3.2 | Sep 2026 | Development Team | CDK Knowledge Base + OpenSearch Serverless + Titan V2; S3 `kb/structured/` deploy and `sync_kb_index.py` ingestion |
 
 ---
 

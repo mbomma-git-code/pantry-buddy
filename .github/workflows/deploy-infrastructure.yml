@@ -11,6 +11,9 @@ on:
       - 'backend/**'
       - 'frontend/**'
       - 'data/recipes_json/**'
+      - 'data/kb/**'
+      - 'tools/build_kb_index.py'
+      - 'tools/sync_kb_index.py'
       - '.github/workflows/deploy-infrastructure.yml'
   workflow_dispatch:
 
@@ -39,6 +42,9 @@ jobs:
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
+      - name: Build Knowledge Base structured corpus
+        run: python3 tools/build_kb_index.py --input data/recipes_json/recipes.json --output-dir data/kb
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -58,6 +64,30 @@ jobs:
         env:
           CDK_DEFAULT_ACCOUNT: ${{ vars.AWS_ACCOUNT_ID }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
+
+      - name: Sync KB corpus and start ingestion
+        run: |
+          set -e
+          python3 -m pip install --quiet boto3
+          REGION="${{ env.AWS_REGION }}"
+          STACK="PantryBuddyStack"
+          DATA_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='DataBucketName'].OutputValue" --output text)
+          KB_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KnowledgeBaseId'].OutputValue" --output text)
+          DS_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KnowledgeBaseDataSourceId'].OutputValue" --output text)
+          if [[ -z "$DATA_BUCKET" || "$DATA_BUCKET" == "None" ]]; then
+            echo "DataBucketName output not found; skipping KB sync"
+            exit 0
+          fi
+          if [[ -z "$KB_ID" || "$KB_ID" == "None" || -z "$DS_ID" || "$DS_ID" == "None" ]]; then
+            echo "Knowledge Base outputs not ready; uploading structured corpus only"
+            python3 tools/sync_kb_index.py --bucket "$DATA_BUCKET" --region "$REGION" --skip-ingest
+            exit 0
+          fi
+          python3 tools/sync_kb_index.py \
+            --bucket "$DATA_BUCKET" \
+            --region "$REGION" \
+            --knowledge-base-id "$KB_ID" \
+            --data-source-id "$DS_ID"
 
       - name: Deploy frontend to stack website bucket
         run: |
@@ -87,13 +117,21 @@ jobs:
           fi
           echo "Stack $STACK status: $STATUS"
 
-          echo "=== 2. Stack outputs (S3, API) ==="
+          echo "=== 2. Stack outputs (S3, API, KB) ==="
           WEBSITE_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='WebsiteBucketName'].OutputValue" --output text)
           DATA_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='DataBucketName'].OutputValue" --output text)
           API_ENDPOINT=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text)
+          KB_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KnowledgeBaseId'].OutputValue" --output text)
+          DS_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KnowledgeBaseDataSourceId'].OutputValue" --output text)
           echo "WebsiteBucketName: $WEBSITE_BUCKET"
           echo "DataBucketName: $DATA_BUCKET"
           echo "ApiEndpoint: $API_ENDPOINT"
+          echo "KnowledgeBaseId: $KB_ID"
+          echo "KnowledgeBaseDataSourceId: $DS_ID"
+          if [[ -z "$KB_ID" || "$KB_ID" == "None" || -z "$DS_ID" || "$DS_ID" == "None" ]]; then
+            echo "Knowledge Base outputs missing from stack"
+            exit 1
+          fi
 
           echo "=== 3. S3 buckets ==="
           aws s3api head-bucket --bucket "$WEBSITE_BUCKET" --region "$REGION" && echo "Website bucket exists: $WEBSITE_BUCKET"
@@ -128,4 +166,15 @@ jobs:
           fi
           aws apigateway get-rest-api --rest-api-id "$API_ID" --region "$REGION" --query '{Name:name,Id:id}' --output table
           echo "API Gateway REST API exists: $API_ID"
+
+          echo "=== 6. Bedrock Knowledge Base ==="
+          aws bedrock-agent get-knowledge-base --knowledge-base-id "$KB_ID" --region "$REGION" \
+            --query '{Name:knowledgeBase.name,Status:knowledgeBase.status,Id:knowledgeBase.knowledgeBaseId}' --output table
+          LAMBDA_ENV_KB=$(aws lambda get-function-configuration --function-name "$MEAL_PLAN_LAMBDA" --region "$REGION" \
+            --query "Environment.Variables.KNOWLEDGE_BASE_ID" --output text)
+          if [[ "$LAMBDA_ENV_KB" != "$KB_ID" ]]; then
+            echo "Lambda KNOWLEDGE_BASE_ID ($LAMBDA_ENV_KB) does not match stack output ($KB_ID)"
+            exit 1
+          fi
+          echo "Knowledge Base wired to Lambda: $KB_ID"
           echo "All AWS resources verified successfully."

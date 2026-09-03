@@ -22,9 +22,16 @@ from config import (
     RECIPE_COMPATIBILITY_MODE,
     RECIPE_DATA_SOURCE,
     API_ENDPOINTS,
-    HTTP_CONFIG
+    HTTP_CONFIG,
 )
 from constants import DAYS_OF_WEEK, MEAL_TYPES
+import rag_agent
+from retrievers import knowledge_base_id
+from v3_api_contract import (
+    not_implemented_payload,
+    validate_v3_chat_request,
+    validate_v3_suggest_meals_request,
+)
 
 # Extract AWS configuration
 BUCKET_NAME = AWS_CONFIG['BUCKET_NAME']
@@ -444,6 +451,40 @@ def generate_structured_plan(body, planning_context):
     recipes = planning_context.get("recipes") or load_all_recipes()
     return {"week": build_week_plan(recipes)}
 
+
+def _v3_catalog_recipes():
+    artifact = load_canonical_recipe_artifact(required=True)
+    return _extract_recipe_list(artifact)
+
+
+def handle_v3_chat(event):
+    try:
+        body = json.loads(event.get("body") or "{}")
+        validate_v3_chat_request(body)
+        # Production KB path does not need the catalog artifact for retrieval.
+        recipes = [] if knowledge_base_id() else _v3_catalog_recipes()
+        payload = rag_agent.run_chat(body, recipes)
+    except FileNotFoundError as exc:
+        return response(500, {"error": str(exc)})
+    except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        return response(400, {"error": str(exc)})
+    except RuntimeError as exc:
+        return response(500, {"error": str(exc)})
+
+    return response(200, payload)
+
+
+def handle_v3_suggest_meals(event):
+    try:
+        body = json.loads(event.get("body") or "{}")
+        validate_v3_suggest_meals_request(body)
+    except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        return response(400, {"error": str(exc)})
+
+    # Suggest-meals stays stubbed until a later slice; chat is the first RAG surface.
+    return response(501, not_implemented_payload("suggest_meals"))
+
+
 def lambda_handler(event, context):
     """
     Main Lambda entry point.
@@ -460,6 +501,13 @@ def lambda_handler(event, context):
     """
     # Determine API version from event path
     path = event.get("resource") or event.get("path", "")
+
+    v3_chat = API_ENDPOINTS["v3"]["chat"]
+    v3_suggest = API_ENDPOINTS["v3"]["suggest_meals"]
+    if path == v3_chat:
+        return handle_v3_chat(event)
+    if path == v3_suggest:
+        return handle_v3_suggest_meals(event)
 
     # Route to appropriate version handler based on path
     v2_endpoint = API_ENDPOINTS['v2']['generate_meal_plan']

@@ -4,3 +4,8 @@ __pycache__
 playwright-report/
 test-results/
 .tmp/
+
+# Generated Knowledge Base corpus (rebuild with make build-kb-index)
+data/kb/structured/*
+!data/kb/structured/.gitkeep
+data/kb/kb_manifest.json

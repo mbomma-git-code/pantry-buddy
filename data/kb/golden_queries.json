@@ -1,0 +1,97 @@
+{
+  "version": "1.0",
+  "description": "Small golden query set for RAG v3 lexical/local recall and citation checks. Expand when Bedrock KB eval harness is added.",
+  "defaults": {
+    "topK": 5
+  },
+  "cases": [
+    {
+      "id": "title-oatmeal",
+      "query": "How do I make toasted coconut baked oatmeal?",
+      "filters": null,
+      "expect": {
+        "mustIncludeRecipeIds": ["toasted-coconut-baked-oatmeal-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "title-rajma",
+      "query": "rajma masala restaurant style",
+      "filters": null,
+      "expect": {
+        "mustIncludeRecipeIds": ["rajma-recipe-rajma-masala-restaurant-style-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "title-idli",
+      "query": "idli recipe with batter tips",
+      "filters": null,
+      "expect": {
+        "mustIncludeRecipeIds": ["idli-recipe-with-batter-traditional-key-tips-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "title-buddha-bowl",
+      "query": "sweet potato chickpea buddha bowl",
+      "filters": null,
+      "expect": {
+        "mustIncludeRecipeIds": ["sweet-potato-chickpea-buddha-bowl-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "source-lentil-soup",
+      "query": "best lentil soup cookie and kate",
+      "filters": null,
+      "expect": {
+        "mustIncludeRecipeIds": ["best-lentil-soup-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "source-overnight-oats",
+      "query": "overnight oats peanut butter nora cooks",
+      "filters": null,
+      "expect": {
+        "mustIncludeRecipeIds": ["peanut-butter-overnight-oats-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "filter-quinoa-lunch",
+      "query": "quinoa salad lunch ideas",
+      "filters": {"mealType": "lunch"},
+      "expect": {
+        "mustIncludeRecipeIds": ["quinoa-salad-love-and-lemons-recipe"],
+        "rankAtMost": 1,
+        "requireCitations": true
+      }
+    },
+    {
+      "id": "filter-excludes-wrong-meal",
+      "query": "quinoa salad",
+      "filters": {"mealType": "breakfast"},
+      "expect": {
+        "mustExcludeRecipeIds": ["quinoa-salad-love-and-lemons-recipe"],
+        "requireCitations": false
+      }
+    },
+    {
+      "id": "low-recall-nonsense",
+      "query": "xyzzyplugh",
+      "filters": null,
+      "expect": {
+        "lowRecall": true,
+        "requireCitations": false
+      }
+    }
+  ]
+}

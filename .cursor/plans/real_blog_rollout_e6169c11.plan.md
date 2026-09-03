@@ -34,7 +34,7 @@ Replace example blog URLs with a real curated source list, make those URLs visib
 
 ## Current State
 
-- `[/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/import_sources.json](/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/import_sources.json)` now contains a small real-world curated manifest covering all four meal types, while `[/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/import_sources.sample.json](/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/import_sources.sample.json)` remains the template.
+- `[/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/import_sources.json](/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/import_sources.json)` contains a small real-world curated manifest covering all four meal types.
 - `[/Users/mounitha/Desktop/PantryBuddy/tools/import_blog_recipes.py](/Users/mounitha/Desktop/PantryBuddy/tools/import_blog_recipes.py)` imports the curated sources into canonical recipes with `sourceUrl` and `sourceName`, and focused importer tests cover artifact/index generation behavior.
 - `[/Users/mounitha/Desktop/PantryBuddy/backend/lambda_function.py](/Users/mounitha/Desktop/PantryBuddy/backend/lambda_function.py)` returns source metadata in recipe detail objects, and backend tests verify the `/v2/generate-meal-plan` response shape.
 - `[/Users/mounitha/Desktop/PantryBuddy/frontend/app.js](/Users/mounitha/Desktop/PantryBuddy/frontend/app.js)` preserves and renders source attribution, with shared normalization logic extracted into `[/Users/mounitha/Desktop/PantryBuddy/frontend/meal_planner_model.js](/Users/mounitha/Desktop/PantryBuddy/frontend/meal_planner_model.js)` for direct testing.
@@ -45,7 +45,7 @@ Replace example blog URLs with a real curated source list, make those URLs visib
 
 ### 1. Curate the real BlogUrlsList
 
-- Add a real reviewed manifest alongside the sample file, likely under `[/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/](/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/)`, and keep the sample file as a template.
+- Add a real reviewed manifest under `[/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/](/Users/mounitha/Desktop/PantryBuddy/data/recipes_json/)` (see `import_sources.json` and `load_sources()` in the importer for the expected shape).
 - Start with a small vetted set that covers all four meal types so `[tools/import_blog_recipes.py](file:///Users/mounitha/Desktop/PantryBuddy/tools/import_blog_recipes.py)` can generate non-empty canonical/index artifacts.
 - Pre-fill `mealType` for sources that may not infer cleanly, and use `sourceName` overrides when the site publisher metadata is messy.
 - Decide whether the real manifest should remain committed or be maintained as a private/operator-managed file; if it stays committed, keep it strictly to public recipe URLs and review-friendly metadata.

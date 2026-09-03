@@ -36,7 +36,7 @@ Each line in [`import_sources.json`](data/recipes_json/import_sources.json) must
 
 - `url` (required)
 - `mealType` — **always set** for every entry. The importer honors this override ([`infer_meal_type`](tools/import_blog_recipes.py)); if omitted, import can fail with *"Could not infer mealType"* when the page text does not match built-in keywords.
-- Optional: `diet`, `cuisine`, `sourceName` (camelCase, matching the sample file).
+- Optional: `diet`, `cuisine`, `sourceName` (camelCase, matching entries in `import_sources.json`).
 
 ## Curation strategy (real blogs + schema.org)
 
@@ -71,7 +71,7 @@ python tools/import_blog_recipes.py \
 
 3. **Validate:** Run targeted tests, e.g. `pytest tests/test_import_blog_recipes.py` (and any backend tests you normally run before deploy). Optionally spot-check `recipes.json` against [`recipes.schema.json`](data/recipes_json/recipes.schema.json) using the same workflow described in [`docs/HIGH_LEVEL_DESIGN_v2.md`](docs/HIGH_LEVEL_DESIGN_v2.md) (manual or project tooling).
 
-4. **Production visibility:** Merge to `main` so the existing GitHub Actions / CDK pipeline republishes `data/recipes_json` to the data bucket (no separate “normalize” script beyond the importer + indexes unless you also maintain [`recipes.sample.json`](data/recipes_json/recipes.sample.json) for dev-only samples — that file is **not** required for Lambda behavior).
+4. **Production visibility:** Merge to `main` so the existing GitHub Actions / CDK pipeline republishes `data/recipes_json` to the data bucket (no separate “normalize” script beyond the importer + indexes).
 
 ## Risk / edge cases
 
