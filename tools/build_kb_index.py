@@ -133,6 +133,14 @@ def split_body(body: str, recipe_id: str, max_body_bytes: int) -> list[tuple[str
     ]
 
 
+def _metadata_string(value: Any) -> str | None:
+    """Bedrock KB rejects null metadata values; omit blank/null attributes."""
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
 def metadata_for_recipe(
     recipe: Mapping[str, Any],
     *,
@@ -141,10 +149,12 @@ def metadata_for_recipe(
     chunk_part: int | None = None,
     chunk_parts_total: int | None = None,
 ) -> dict[str, Any]:
-    attributes: dict[str, Any] = {
+    # Bedrock S3 metadata sidecars only accept string/number/bool/string-list values.
+    # Nulls (common for optional diet/cuisine) cause the whole file to be ignored.
+    candidates: dict[str, Any] = {
         "docType": "structured",
         "recipeId": recipe.get("id"),
-        "sourceUrl": recipe.get("sourceUrl") or "",
+        "sourceUrl": recipe.get("sourceUrl") if recipe.get("sourceUrl") is not None else "",
         "sourceName": recipe.get("sourceName"),
         "title": recipe.get("title"),
         "mealType": recipe.get("mealType"),
@@ -154,9 +164,23 @@ def metadata_for_recipe(
         "artifactVersion": artifact.get("version"),
         "contentSha256": content_sha256,
     }
+    attributes: dict[str, Any] = {}
+    for key, value in candidates.items():
+        if isinstance(value, bool):
+            attributes[key] = value
+        elif isinstance(value, (int, float)) and not isinstance(value, bool):
+            attributes[key] = value
+        elif key == "sourceUrl":
+            # Keep empty string so citation filters always see the key.
+            attributes[key] = "" if value is None else str(value).strip()
+        else:
+            text = _metadata_string(value)
+            if text is not None:
+                attributes[key] = text
     if chunk_part is not None:
-        attributes["chunkPart"] = chunk_part
-        attributes["chunkPartsTotal"] = chunk_parts_total
+        attributes["chunkPart"] = int(chunk_part)
+        if chunk_parts_total is not None:
+            attributes["chunkPartsTotal"] = int(chunk_parts_total)
     return {"metadataAttributes": attributes}
 
 

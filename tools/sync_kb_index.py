@@ -167,6 +167,24 @@ def sync_structured_corpus(
     }
 
 
+def _active_ingestion_job(
+    bedrock_agent_client: Any,
+    *,
+    knowledge_base_id: str,
+    data_source_id: str,
+) -> dict[str, Any] | None:
+    response = bedrock_agent_client.list_ingestion_jobs(
+        knowledgeBaseId=knowledge_base_id,
+        dataSourceId=data_source_id,
+        maxResults=10,
+    )
+    active_statuses = {"STARTING", "IN_PROGRESS"}
+    for job in response.get("ingestionJobSummaries") or []:
+        if job.get("status") in active_statuses:
+            return job
+    return None
+
+
 def start_ingestion(
     *,
     bedrock_agent_client: Any,
@@ -174,15 +192,39 @@ def start_ingestion(
     data_source_id: str,
     description: str = "PantryBuddy structured corpus sync",
 ) -> dict[str, Any]:
-    response = bedrock_agent_client.start_ingestion_job(
-        knowledgeBaseId=knowledge_base_id,
-        dataSourceId=data_source_id,
-        description=description[:200],
-    )
+    try:
+        response = bedrock_agent_client.start_ingestion_job(
+            knowledgeBaseId=knowledge_base_id,
+            dataSourceId=data_source_id,
+            description=description[:200],
+        )
+    except ClientError as exc:
+        code = exc.response.get("Error", {}).get("Code", "")
+        message = str(exc.response.get("Error", {}).get("Message", "") or exc)
+        # Concurrent deploys / overlapping syncs often hit ConflictException.
+        if code in {"ConflictException", "ValidationException"}:
+            active = _active_ingestion_job(
+                bedrock_agent_client,
+                knowledge_base_id=knowledge_base_id,
+                data_source_id=data_source_id,
+            )
+            if active:
+                return {
+                    "ingestionJobId": active.get("ingestionJobId"),
+                    "status": active.get("status") or "IN_PROGRESS",
+                    "reusedExisting": True,
+                }
+            # Fall through with a clearer error if nothing is active.
+            raise RuntimeError(
+                f"StartIngestionJob failed ({code}): {message}"
+            ) from exc
+        raise
+
     job = response.get("ingestionJob") or {}
     return {
         "ingestionJobId": job.get("ingestionJobId"),
         "status": job.get("status"),
+        "reusedExisting": False,
     }
 
 
@@ -273,9 +315,10 @@ def main(argv: list[str] | None = None) -> int:
         knowledge_base_id=args.knowledge_base_id,
         data_source_id=args.data_source_id,
     )
+    reused = " (reused in-progress job)" if job.get("reusedExisting") else ""
     print(
         f"Started ingestion job {job.get('ingestionJobId')} "
-        f"(status={job.get('status')})"
+        f"(status={job.get('status')}){reused}"
     )
     return 0
 

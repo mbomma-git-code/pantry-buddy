@@ -63,6 +63,31 @@ class BuildKbIndexTests(unittest.TestCase):
             self.assertEqual(attrs["mealType"], "breakfast")
             self.assertEqual(manifest["documents"][0]["recipeId"], "berry-oats")
 
+    def test_metadata_omits_null_optional_fields(self):
+        recipe = {
+            "id": "plain-toast",
+            "title": "Plain Toast",
+            "sourceUrl": None,
+            "sourceName": None,
+            "mealType": "breakfast",
+            "diet": None,
+            "cuisine": None,
+            "ingredients": [],
+            "instructions": [],
+        }
+        meta = builder.metadata_for_recipe(
+            recipe,
+            artifact={"generatedAt": "2026-09-03T00:00:00Z", "version": "1.0"},
+            content_sha256="abc",
+        )
+        attrs = meta["metadataAttributes"]
+        self.assertEqual(attrs["recipeId"], "plain-toast")
+        self.assertEqual(attrs["sourceUrl"], "")
+        self.assertNotIn("diet", attrs)
+        self.assertNotIn("cuisine", attrs)
+        self.assertNotIn("sourceName", attrs)
+        self.assertNotIn(None, attrs.values())
+
     def test_orphan_cleanup_removes_stale_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

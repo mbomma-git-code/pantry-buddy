@@ -127,7 +127,34 @@ class SyncKbIndexTests(unittest.TestCase):
             data_source_id="ds-1",
         )
         self.assertEqual(result["ingestionJobId"], "job-1")
+        self.assertFalse(result["reusedExisting"])
         client.start_ingestion_job.assert_called_once()
+
+    def test_start_ingestion_reuses_in_progress_on_conflict(self):
+        class FakeClientError(Exception):
+            def __init__(self):
+                self.response = {
+                    "Error": {
+                        "Code": "ConflictException",
+                        "Message": "Ingestion job already in progress",
+                    }
+                }
+
+        sync.ClientError = FakeClientError  # type: ignore[misc,assignment]
+        client = MagicMock()
+        client.start_ingestion_job.side_effect = FakeClientError()
+        client.list_ingestion_jobs.return_value = {
+            "ingestionJobSummaries": [
+                {"ingestionJobId": "job-running", "status": "IN_PROGRESS"}
+            ]
+        }
+        result = sync.start_ingestion(
+            bedrock_agent_client=client,
+            knowledge_base_id="kb-1",
+            data_source_id="ds-1",
+        )
+        self.assertEqual(result["ingestionJobId"], "job-running")
+        self.assertTrue(result["reusedExisting"])
 
 
 if __name__ == "__main__":
