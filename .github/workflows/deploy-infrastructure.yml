@@ -65,7 +65,10 @@ jobs:
           CDK_DEFAULT_ACCOUNT: ${{ vars.AWS_ACCOUNT_ID }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
 
+      # Do not block frontend publish if ingestion is briefly unavailable after KB create.
       - name: Sync KB corpus and start ingestion
+        id: kb_sync
+        continue-on-error: true
         run: |
           set -e
           python3 -m pip install --quiet boto3
@@ -83,13 +86,24 @@ jobs:
             python3 tools/sync_kb_index.py --bucket "$DATA_BUCKET" --region "$REGION" --skip-ingest
             exit 0
           fi
-          python3 tools/sync_kb_index.py \
-            --bucket "$DATA_BUCKET" \
-            --region "$REGION" \
-            --knowledge-base-id "$KB_ID" \
-            --data-source-id "$DS_ID"
+          # First deploy can race AOSS/KB readiness; retry StartIngestionJob.
+          for attempt in 1 2 3 4 5; do
+            if python3 tools/sync_kb_index.py \
+              --bucket "$DATA_BUCKET" \
+              --region "$REGION" \
+              --knowledge-base-id "$KB_ID" \
+              --data-source-id "$DS_ID"; then
+              echo "KB sync succeeded on attempt ${attempt}"
+              exit 0
+            fi
+            echo "KB sync attempt ${attempt} failed; waiting 30s before retry"
+            sleep 30
+          done
+          echo "KB sync failed after retries" >&2
+          exit 1
 
       - name: Deploy frontend to stack website bucket
+        if: success()
         run: |
           set -e
           REGION="${{ env.AWS_REGION }}"
@@ -178,3 +192,10 @@ jobs:
           fi
           echo "Knowledge Base wired to Lambda: $KB_ID"
           echo "All AWS resources verified successfully."
+
+      - name: Fail if KB sync did not succeed
+        if: always() && steps.kb_sync.outcome == 'failure'
+        run: |
+          echo "CDK and frontend deployed, but KB corpus sync/ingestion failed." >&2
+          echo "Re-run make sync-kb-index with stack outputs, or re-run this workflow." >&2
+          exit 1
