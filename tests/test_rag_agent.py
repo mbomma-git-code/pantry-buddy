@@ -155,6 +155,22 @@ class RagAgentTests(unittest.TestCase):
         )
         self.assertEqual(payload["citations"][0]["recipeId"], "lentil-soup")
 
+    def test_run_suggest_meals_hydrates_from_catalog(self):
+        payload = rag_agent.run_suggest_meals(
+            {
+                "query": "berry oats breakfast",
+                "count": 1,
+                "filters": {"mealType": "breakfast"},
+            },
+            RECIPES,
+        )
+        self.assertEqual(len(payload["suggestions"]), 1)
+        self.assertEqual(payload["suggestions"][0]["id"], "berry-oats")
+        self.assertEqual(
+            payload["suggestions"][0]["ingredients"][0]["item"], "Oats"
+        )
+        self.assertEqual(payload["citations"][0]["recipeId"], "berry-oats")
+
 
 if __name__ == "__main__":
     unittest.main()

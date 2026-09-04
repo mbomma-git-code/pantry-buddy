@@ -308,16 +308,31 @@ class LambdaFunctionCompatibilityTests(unittest.TestCase):
         response = LAMBDA.lambda_handler(event, context=None)
         self.assertEqual(response["statusCode"], 400)
 
-    def test_handle_v3_suggest_meals_valid_returns_not_implemented(self):
+    def test_handle_v3_suggest_meals_returns_suggestions(self):
         event = {
             "resource": "/v3/suggest-meals",
             "path": "/v3/suggest-meals",
-            "body": json.dumps({"query": "light lunches under 30 minutes"}),
+            "body": json.dumps(
+                {
+                    "query": "berry oats breakfast",
+                    "count": 2,
+                    "filters": {"mealType": "breakfast"},
+                }
+            ),
         }
-        response = LAMBDA.lambda_handler(event, context=None)
+
+        with patch.object(
+            LAMBDA, "load_canonical_recipe_artifact", return_value=CANONICAL_ARTIFACT
+        ), patch.dict(
+            "os.environ", {"KNOWLEDGE_BASE_ID": "", "RAG_GENERATOR": "fake"}, clear=False
+        ):
+            response = LAMBDA.lambda_handler(event, context=None)
+
         payload = json.loads(response["body"])
-        self.assertEqual(response["statusCode"], 501)
-        self.assertEqual(payload.get("operation"), "suggest_meals")
+        self.assertEqual(response["statusCode"], 200)
+        self.assertTrue(payload.get("suggestions"))
+        self.assertEqual(payload["suggestions"][0]["id"], "berry-oats")
+        self.assertTrue(payload.get("citations"))
 
 
 if __name__ == "__main__":

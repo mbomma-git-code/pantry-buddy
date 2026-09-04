@@ -47,7 +47,7 @@ function getLocalApiOverride() {
 
 const CONFIG = {
   // API Version - Change this to switch between API versions
-  API_VERSION: 'v2', // Options: 'v1', 'v2'
+  API_VERSION: 'v3', // Options: 'v1', 'v2', 'v3'
 
   // API Base URL
   API_BASE_URL: getLocalApiOverride() || PROD_API_BASE_URL,
@@ -60,7 +60,7 @@ const CONFIG = {
     v2: {
       generateMealPlan: '/v2/generate-meal-plan'
     },
-    // RAG v3: separate from the weekly planner; use getApiUrl with API_VERSION 'v3' when calling.
+    // RAG v3: meal plan generation uses suggest-meals; chat is available separately.
     v3: {
       chat: '/v3/chat',
       suggestMeals: '/v3/suggest-meals'

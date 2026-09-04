@@ -14,7 +14,8 @@ const {
   buildWeekDates,
   formatDateLabel,
   formatWeekRange,
-  createEmptyWeek
+  createEmptyWeek,
+  buildWeekFromMealSuggestions
 } = AppLogic;
 
 function runTest(name, fn) {
@@ -146,4 +147,28 @@ runTest("formatDateLabel returns short month and day", () => {
   const s = formatDateLabel(new Date(2026, 3, 2));
   assert.match(s, /Apr/);
   assert.match(s, /2/);
+});
+
+runTest("buildWeekFromMealSuggestions fills days from meal lists", () => {
+  const weekDates = [
+    { day: "Monday", date: new Date(2026, 3, 6) },
+    { day: "Tuesday", date: new Date(2026, 3, 7) }
+  ];
+  const suggestionsByMeal = {
+    breakfast: [{ title: "Oats" }, { title: "Toast" }],
+    lunch: [{ title: "Soup" }],
+    snack: [],
+    dinner: [{ title: "Stew" }, { title: "Pasta" }]
+  };
+  const week = buildWeekFromMealSuggestions(
+    weekDates,
+    suggestionsByMeal,
+    (recipe) => ({ title: recipe.title })
+  );
+  assert.equal(week.length, 2);
+  assert.equal(week[0].breakfast.title, "Oats");
+  assert.equal(week[1].breakfast.title, "Toast");
+  assert.equal(week[0].lunch.title, "Soup");
+  assert.equal(week[1].lunch, null);
+  assert.equal(week[1].dinner.title, "Pasta");
 });

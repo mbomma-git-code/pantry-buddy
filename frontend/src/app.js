@@ -1,11 +1,9 @@
-const API_URL = typeof getApiUrl === "function"
-  ? getApiUrl("generateMealPlan")
-  : `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.v2.generateMealPlan}`;
+const SUGGEST_MEALS_URL = typeof getApiUrl === "function"
+  ? getApiUrl("suggestMeals")
+  : `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.v3.suggestMeals}`;
 const {
-  createEmptyNutrition,
   normalizeText,
-  normalizeRecipe,
-  normalizeWeekData
+  normalizeRecipe
 } = MealPlannerModel;
 
 const {
@@ -17,7 +15,8 @@ const {
   createEmptyWeek,
   buildWeekDates,
   formatDateLabel,
-  formatWeekRange
+  formatWeekRange,
+  buildWeekFromMealSuggestions
 } = AppLogic;
 
 function MealPlannerApp() {
@@ -34,23 +33,43 @@ function MealPlannerApp() {
     setErrorMessage("");
 
     try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: CONFIG.HEADERS,
-        body: JSON.stringify({})
-      });
+      const suggestionsByMeal = {};
 
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
+      await Promise.all(
+        MEAL_FIELDS.map(async (meal) => {
+          const response = await fetch(SUGGEST_MEALS_URL, {
+            method: "POST",
+            headers: CONFIG.HEADERS,
+            body: JSON.stringify({
+              query: `${meal.label} meal ideas for the week`,
+              count: 7,
+              filters: { mealType: meal.key },
+              retrieval: { topK: 10 }
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
+
+          const data = await response.json();
+          suggestionsByMeal[meal.key] = Array.isArray(data.suggestions)
+            ? data.suggestions
+            : [];
+        })
+      );
+
+      const hasAny = MEAL_FIELDS.some(
+        (meal) => (suggestionsByMeal[meal.key] || []).length > 0
+      );
+      if (!hasAny) {
+        throw new Error("No grounded meal suggestions were returned");
       }
 
-      const data = await response.json();
-      const normalizedWeek = normalizeWeekData(
-        data.week,
-        weekDates.map(({ day, date }) => ({
-          day,
-          dateLabel: formatDateLabel(date)
-        }))
+      const normalizedWeek = buildWeekFromMealSuggestions(
+        weekDates,
+        suggestionsByMeal,
+        normalizeRecipe
       );
       setWeekData(normalizedWeek);
       setSelectedMeal(findFirstRecipe(normalizedWeek));

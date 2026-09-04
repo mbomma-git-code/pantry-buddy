@@ -124,6 +124,29 @@
     }));
   }
 
+  function buildWeekFromMealSuggestions(weekDates, suggestionsByMeal, normalizeRecipe) {
+    return weekDates.map(({ day, date }, index) => {
+      const row = {
+        day,
+        dateLabel: formatDateLabel(date),
+        breakfast: null,
+        lunch: null,
+        snack: null,
+        dinner: null
+      };
+
+      for (const meal of MEAL_FIELDS) {
+        const list = suggestionsByMeal[meal.key] || [];
+        const recipe = list[index] || null;
+        row[meal.key] = recipe && typeof normalizeRecipe === "function"
+          ? normalizeRecipe(recipe, meal.key)
+          : recipe;
+      }
+
+      return row;
+    });
+  }
+
   return {
     DAY_ORDER,
     MEAL_FIELDS,
@@ -135,6 +158,7 @@
     buildWeekDates,
     formatDateLabel,
     formatWeekRange,
-    createEmptyWeek
+    createEmptyWeek,
+    buildWeekFromMealSuggestions
   };
 });

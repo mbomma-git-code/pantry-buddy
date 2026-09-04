@@ -28,7 +28,6 @@ from constants import DAYS_OF_WEEK, MEAL_TYPES
 import rag_agent
 from retrievers import knowledge_base_id
 from v3_api_contract import (
-    not_implemented_payload,
     validate_v3_chat_request,
     validate_v3_suggest_meals_request,
 )
@@ -478,11 +477,19 @@ def handle_v3_suggest_meals(event):
     try:
         body = json.loads(event.get("body") or "{}")
         validate_v3_suggest_meals_request(body)
+        # Hydrate suggestions from the catalog when available; KB retrieval still works
+        # with an empty list (metadata-only summaries).
+        try:
+            recipes = _v3_catalog_recipes()
+        except FileNotFoundError:
+            recipes = []
+        payload = rag_agent.run_suggest_meals(body, recipes)
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
         return response(400, {"error": str(exc)})
+    except RuntimeError as exc:
+        return response(500, {"error": str(exc)})
 
-    # Suggest-meals stays stubbed until a later slice; chat is the first RAG surface.
-    return response(501, not_implemented_payload("suggest_meals"))
+    return response(200, payload)
 
 
 def lambda_handler(event, context):
