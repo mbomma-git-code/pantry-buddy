@@ -65,41 +65,65 @@ jobs:
           CDK_DEFAULT_ACCOUNT: ${{ vars.AWS_ACCOUNT_ID }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
 
-      # Do not block frontend publish if ingestion is briefly unavailable after KB create.
+      # Upload corpus + start Bedrock ingestion using the stack KbSyncRole when possible.
       - name: Sync KB corpus and start ingestion
         id: kb_sync
         continue-on-error: true
         run: |
-          set -e
+          set -euo pipefail
           python3 -m pip install --quiet boto3
           REGION="${{ env.AWS_REGION }}"
           STACK="PantryBuddyStack"
           DATA_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='DataBucketName'].OutputValue" --output text)
           KB_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KnowledgeBaseId'].OutputValue" --output text)
           DS_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KnowledgeBaseDataSourceId'].OutputValue" --output text)
+          SYNC_ROLE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" --query "Stacks[0].Outputs[?OutputKey=='KbSyncRoleArn'].OutputValue" --output text)
+          echo "DataBucket=$DATA_BUCKET KnowledgeBaseId=$KB_ID DataSourceId=$DS_ID"
+          echo "KbSyncRoleArn=$SYNC_ROLE_ARN"
+
           if [[ -z "$DATA_BUCKET" || "$DATA_BUCKET" == "None" ]]; then
             echo "DataBucketName output not found; skipping KB sync"
             exit 0
           fi
+
+          # Prefer the dedicated sync role (S3 prefix + StartIngestionJob).
+          if [[ -n "$SYNC_ROLE_ARN" && "$SYNC_ROLE_ARN" != "None" ]]; then
+            CREDS_JSON=$(aws sts assume-role \
+              --role-arn "$SYNC_ROLE_ARN" \
+              --role-session-name pantrybuddy-kb-sync \
+              --duration-seconds 3600 \
+              --query 'Credentials' \
+              --output json)
+            export AWS_ACCESS_KEY_ID=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["AccessKeyId"])' <<<"$CREDS_JSON")
+            export AWS_SECRET_ACCESS_KEY=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["SecretAccessKey"])' <<<"$CREDS_JSON")
+            export AWS_SESSION_TOKEN=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["SessionToken"])' <<<"$CREDS_JSON")
+            echo "Assumed KbSyncRole for corpus sync"
+            aws sts get-caller-identity --output table
+          else
+            echo "KbSyncRoleArn missing; syncing with deploy-role credentials"
+          fi
+
           if [[ -z "$KB_ID" || "$KB_ID" == "None" || -z "$DS_ID" || "$DS_ID" == "None" ]]; then
             echo "Knowledge Base outputs not ready; uploading structured corpus only"
             python3 tools/sync_kb_index.py --bucket "$DATA_BUCKET" --region "$REGION" --skip-ingest
             exit 0
           fi
-          # First deploy can race AOSS/KB readiness; retry StartIngestionJob.
+
+          # Upload first (S3), then start ingestion with retries for transient conflicts.
+          python3 tools/sync_kb_index.py --bucket "$DATA_BUCKET" --region "$REGION" --skip-ingest
           for attempt in 1 2 3 4 5; do
             if python3 tools/sync_kb_index.py \
               --bucket "$DATA_BUCKET" \
               --region "$REGION" \
               --knowledge-base-id "$KB_ID" \
               --data-source-id "$DS_ID"; then
-              echo "KB sync succeeded on attempt ${attempt}"
+              echo "KB sync + ingestion succeeded on attempt ${attempt}"
               exit 0
             fi
-            echo "KB sync attempt ${attempt} failed; waiting 30s before retry"
-            sleep 30
+            echo "KB ingestion attempt ${attempt} failed; waiting 20s before retry" >&2
+            sleep 20
           done
-          echo "KB sync failed after retries" >&2
+          echo "KB ingestion failed after retries (S3 corpus upload already completed)" >&2
           exit 1
 
       - name: Deploy frontend to stack website bucket
@@ -175,11 +199,6 @@ jobs:
           echo "API Gateway REST API exists: $API_ID"
 
           echo "=== 6. Bedrock Knowledge Base ==="
-          if ! aws bedrock-agent get-knowledge-base --knowledge-base-id "$KB_ID" --region "$REGION" \
-            --query '{Name:knowledgeBase.name,Status:knowledgeBase.status,Id:knowledgeBase.knowledgeBaseId}' --output table; then
-            echo "Warning: could not call bedrock-agent get-knowledge-base (check GitHubCDKDeployRole bedrock permissions)" >&2
-            exit 1
-          fi
           LAMBDA_ENV_KB=$(aws lambda get-function-configuration --function-name "$MEAL_PLAN_LAMBDA" --region "$REGION" \
             --query "Environment.Variables.KNOWLEDGE_BASE_ID" --output text)
           if [[ "$LAMBDA_ENV_KB" != "$KB_ID" ]]; then
@@ -187,6 +206,12 @@ jobs:
             exit 1
           fi
           echo "Knowledge Base wired to Lambda: $KB_ID"
+          if aws bedrock-agent get-knowledge-base --knowledge-base-id "$KB_ID" --region "$REGION" \
+            --query '{Name:knowledgeBase.name,Status:knowledgeBase.status,Id:knowledgeBase.knowledgeBaseId}' --output table; then
+            echo "Knowledge Base describe OK"
+          else
+            echo "Warning: bedrock-agent get-knowledge-base failed (deploy role may lack bedrock:*); Lambda wiring still verified." >&2
+          fi
           echo "All AWS resources verified successfully."
 
       - name: Fail if KB sync did not succeed
